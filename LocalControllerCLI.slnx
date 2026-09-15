@@ -1,0 +1,44 @@
+<Solution>
+  <Folder Name="/Dependencies/" />
+  <Folder Name="/Dependencies/ISO15118/">
+    <Project Path="libs/WWCP_ISO15118_20/WWCP_ISO15118_2/WWCP_ISO15118_2.csproj" />
+    <Project Path="libs/WWCP_ISO15118_20/WWCP_ISO15118_20/WWCP_ISO15118_20.csproj" />
+    <Project Path="libs/WWCP_ISO15118_20/WWCP_ISO15118_20_Tests/WWCP_ISO15118_20_Tests.csproj" />
+    <Project Path="libs/WWCP_ISO15118_20/WWCP_ISO15118_2_Tests/WWCP_ISO15118_2_Tests.csproj" />
+  </Folder>
+  <Folder Name="/Dependencies/OCPP/">
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPP_Common/WWCP_OCPP_Common.csproj" />
+  </Folder>
+  <Folder Name="/Dependencies/OCPPv1.6/">
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv1.6/WWCP_OCPPv1.6.csproj" />
+  </Folder>
+  <Folder Name="/Dependencies/OCPPv2.1/">
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1/WWCP_OCPPv2.1.csproj" />
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_Adapter/WWCP_OCPPv2.1_Adapter.csproj" />
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_ChargingStation/WWCP_OCPPv2.1_ChargingStation.csproj" />
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_CSMS/WWCP_OCPPv2.1_CSMS.csproj" />
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_EnergyMeter/WWCP_OCPPv2.1_EnergyMeter.csproj" />
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_Gateway/WWCP_OCPPv2.1_Gateway.csproj" />
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_LocalController/WWCP_OCPPv2.1_LocalController.csproj" />
+    <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_Tests/WWCP_OCPPv2.1_Tests.csproj" />
+  </Folder>
+  <Folder Name="/Dependencies/OpenChargingCloud/">
+    <Project Path="libs/OpenChargingCloudAPI/OpenChargingCloudAPI/OpenChargingCloudAPI.csproj" />
+    <Project Path="libs/OpenChargingCloudAPI/OpenChargingCloudAPITests/OpenChargingCloudAPITests.csproj" />
+    <Project Path="libs/WWCP_Core/WWCP_Core/WWCP_Core.csproj" />
+    <Project Path="libs/WWCP_Core/WWCP_CoreData/WWCP_CoreData.csproj" />
+    <Project Path="libs/WWCP_Core/WWCP_Core_Tests/WWCP_Core_Tests.csproj" />
+    <Project Path="libs/WWCP_Core/WWCP_OverlayNetworking/WWCP_OverlayNetworking.csproj" />
+    <Project Path="libs/WWCP_Core/WWCP_OverlayNetworking2/WWCP_OverlayNetworking2.csproj" />
+    <Project Path="libs/WWCP_Core/WWCP_OverlayNetworking_Tests/WWCP_OverlayNetworking_Tests.csproj" />
+  </Folder>
+  <Folder Name="/Dependencies/Vanaheimr/">
+    <Project Path="libs/Hermod/Hermod/Hermod.csproj" />
+    <Project Path="libs/Hermod/HermodTests/HermodTests.csproj" />
+    <Project Path="libs/SMSAPI/SMSAPI/SMSAPI.csproj" />
+    <Project Path="libs/Styx/Styx/Styx.csproj" />
+    <Project Path="libs/Styx/StyxTests/StyxTests.csproj" />
+    <Project Path="libs/TelegramBotAPI/TelegramBotAPI/TelegramBotAPI.csproj" />
+  </Folder>
+  <Project Path="OCPPLocalControllerTest/OCPPLocalControllerTest.csproj" />
+</Solution>
