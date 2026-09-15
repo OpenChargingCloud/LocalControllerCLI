@@ -21,6 +21,8 @@
     <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_Tests/WWCP_OCPPv2.1_Tests.csproj" />
   </Folder>
   <Folder Name="/Dependencies/OpenChargingCloud/">
+    <Project Path="libs/ChargyCore.NET/ChargyCore/ChargyCore.csproj" />
+    <Project Path="libs/ChargyCore.NET/ChargyCoreTests/ChargyCoreTests.csproj" />
     <Project Path="libs/WWCP_Core/WWCP_Core/WWCP_Core.csproj" />
     <Project Path="libs/WWCP_Core/WWCP_CoreData/WWCP_CoreData.csproj" />
     <Project Path="libs/WWCP_Core/WWCP_Core_Tests/WWCP_Core_Tests.csproj" />

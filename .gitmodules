@@ -22,3 +22,6 @@
 [submodule "libs/LocalController"]
 	path = libs/LocalController
 	url = https://github.com/OpenChargingCloud/LocalController.git
+[submodule "libs/ChargyCore.NET"]
+	path = libs/ChargyCore.NET
+	url = https://github.com/OpenChargingCloud/ChargyCore.NET.git

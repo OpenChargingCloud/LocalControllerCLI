@@ -8,15 +8,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\libs\ChargyCore.NET\ChargyCore\ChargyCore.csproj" />
     <ProjectReference Include="..\libs\Hermod\Hermod\Hermod.csproj" />
     <ProjectReference Include="..\libs\LocalController\LocalController\LocalController.csproj" />
+    <ProjectReference Include="..\libs\Norn\Norn\Norn.csproj" />
     <ProjectReference Include="..\libs\Styx\Styx\Styx.csproj" />
+    <ProjectReference Include="..\libs\Urdr\Urdr\Urdr.csproj" />
     <ProjectReference Include="..\libs\WWCP_Core\WWCP_CoreData\WWCP_CoreData.csproj" />
     <ProjectReference Include="..\libs\WWCP_Core\WWCP_Core\WWCP_Core.csproj" />
     <ProjectReference Include="..\libs\WWCP_OCPP\WWCP_OCPPv1.6\WWCP_OCPPv1.6.csproj" />
     <ProjectReference Include="..\libs\WWCP_OCPP\WWCP_OCPPv2.1\WWCP_OCPPv2.1.csproj" />
     <ProjectReference Include="..\libs\WWCP_OCPP\WWCP_OCPPv2.1_LocalController\WWCP_OCPPv2.1_LocalController.csproj" />
     <ProjectReference Include="..\libs\WWCP_OCPP\WWCP_OCPP_Common\WWCP_OCPP_Common.csproj" />
+  </ItemGroup>
+
+  <!--
+    PKISetup.cs is the former Program.cs: the bench script that built a test
+    PKI - root, server, client and firmware CAs, ECC and RSA - and wired up
+    OCPP nodes by hand. It is kept because that is a lot of knowledge about
+    certificates that nothing else here writes down, and it is excluded from
+    the build because it has a Main() of its own and because what it does is
+    not what this process now is.
+
+    To go back to it, comment this line out and exclude Program.cs instead.
+  -->
+  <ItemGroup>
+    <Compile Remove="PKISetup.cs" />
+    <None Include="PKISetup.cs" />
   </ItemGroup>
 
 </Project>
