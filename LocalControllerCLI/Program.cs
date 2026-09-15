@@ -1,6 +1,6 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
- * This file is part of WWCP OCPP <https://github.com/OpenChargingCloud/WWCP_OCPP>
+ * Copyright (c) 2014-2026 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * This file is part of LocalController <https://github.com/OpenChargingCloud/LocalController>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,11 +49,11 @@ using cloud.charging.open.protocols.OCPPv2_1.LocalController;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OCPP.LocalController
+namespace cloud.charging.open.LocalController
 {
 
     /// <summary>
-    /// An OCPP Local Controller Application.
+    /// A Local Controller.
     /// </summary>
     public class Program
     {
@@ -534,8 +534,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (subjectDN); // self-signed
                 certificateGenerator.SetSubjectDN    (subjectDN);
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23).DateTime);
                 certificateGenerator.SetPublicKey    (rootCA_ECC_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -586,8 +586,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (subjectDN); // self-signed
                 certificateGenerator.SetSubjectDN    (subjectDN);
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23).DateTime);
                 certificateGenerator.SetPublicKey    (rootCA_RSA_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -638,8 +638,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(rootCA_ECC_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=Open Charging Cloud - Server CA (ECC), O=GraphDefined GmbH, OU=TestCA, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-2));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(+5));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-2).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(+5).DateTime);
                 certificateGenerator.SetPublicKey    (serverCA_ECC_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -691,8 +691,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(rootCA_RSA_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=Open Charging Cloud - Server CA (RSA), O=GraphDefined GmbH, OU=TestCA, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23).DateTime);
                 certificateGenerator.SetPublicKey    (serverCA_RSA_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -745,8 +745,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(rootCA_ECC_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=Open Charging Cloud - Client CA (ECC), O=GraphDefined GmbH, OU=TestCA, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-2));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(+5));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-2).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(+5).DateTime);
                 certificateGenerator.SetPublicKey    (clientCA_ECC_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -798,8 +798,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(rootCA_ECC_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=Open Charging Cloud - Client CA (RSA), O=GraphDefined GmbH, OU=TestCA, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23).DateTime);
                 certificateGenerator.SetPublicKey    (clientCA_RSA_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -852,8 +852,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(rootCA_ECC_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=Open Charging Cloud - Firmware Signing CA (ECC), O=GraphDefined GmbH, OU=TestCA, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-2));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(+5));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-2).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(+5).DateTime);
                 certificateGenerator.SetPublicKey    (firmwareCA_ECC_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -905,8 +905,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(rootCA_ECC_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=Open Charging Cloud - Firmware Signing CA (RSA), O=GraphDefined GmbH, OU=TestCA, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays (-3).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddYears(23).DateTime);
                 certificateGenerator.SetPublicKey    (firmwareCA_RSA_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -962,8 +962,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(serverCA_ECC_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=api1.charging.cloud, O=GraphDefined GmbH, OU=ECC, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays  (-1));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddMonths(+3));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays  (-1).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddMonths(+3).DateTime);
                 certificateGenerator.SetPublicKey    (server1_ECC_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -1010,8 +1010,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(serverCA_RSA_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=api1.charging.cloud, O=GraphDefined GmbH, OU=RSA, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays  (-1));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddMonths(+3));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays  (-1).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddMonths(+3).DateTime);
                 certificateGenerator.SetPublicKey    (server1_RSA_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -1059,8 +1059,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(clientCA_ECC_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=client1, O=GraphDefined GmbH, OU=ECC, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays  (-1));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddMonths(+3));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays  (-1).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddMonths(+3).DateTime);
                 certificateGenerator.SetPublicKey    (client1_ECC_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -1101,8 +1101,8 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 certificateGenerator.SetIssuerDN     (new X509Name(clientCA_RSA_Certificate.SubjectDN.ToString()));
                 certificateGenerator.SetSubjectDN    (new X509Name("CN=client1, O=GraphDefined GmbH, OU=RSA, L=Jena, C=Germany"));
-                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays  (-1));
-                certificateGenerator.SetNotAfter     (Timestamp.Now.AddMonths(+3));
+                certificateGenerator.SetNotBefore    (Timestamp.Now.AddDays  (-1).DateTime);
+                certificateGenerator.SetNotAfter     (Timestamp.Now.AddMonths(+3).DateTime);
                 certificateGenerator.SetPublicKey    (client1_RSA_KeyPair.Public);
                 certificateGenerator.SetSerialNumber (BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(long.MaxValue), secureRandom));
 
@@ -1291,13 +1291,13 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
                                                    {
 
                                                        if (webSocketServer.TrustedClientCertificates.Contains(certificate))
-                                                           return (true, []);
+                                                           return TLSValidationResult.Success();
 
-                                                       return (false, ["Could not validate the received TLS client certificate!"]);
+                                                       return TLSValidationResult.Failed("Could not validate the received TLS client certificate!");
 
                                                    }
 
-                                                   return (false, ["Missing or invalid TLS client certificate!"]);
+                                                   return TLSValidationResult.Failed("Missing or invalid TLS client certificate!");
 
                                                },
 
@@ -1385,7 +1385,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
                 );
 
                 await WriteToLogfileV2_1(
-                    $"{timestamp.ToIso8601()}\tNEW TCP\t-\t{connection.RemoteSocket}",
+                    $"{timestamp.ToISO8601()}\tNEW TCP\t-\t{connection.RemoteSocket}",
                     ct
                 );
 
@@ -1399,7 +1399,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
                 );
 
                 await WriteToLogfileV2_1(
-                    $"{timestamp.ToIso8601()}\tNEW WS\t{connection.Login}\t{connection.RemoteSocket}",
+                    $"{timestamp.ToISO8601()}\tNEW WS\t{connection.Login}\t{connection.RemoteSocket}",
                     ct
                 );
 
@@ -1413,7 +1413,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
                 );
 
                 await WriteToLogfileV2_1(
-                    $"{timestamp.ToIso8601()}\tCLOSE\t{connection.Login}\t{connection.RemoteSocket}",
+                    $"{timestamp.ToISO8601()}\tCLOSE\t{connection.Login}\t{connection.RemoteSocket}",
                     ct
                 );
 
@@ -1427,7 +1427,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
                 );
 
                 await WriteToLogfileV2_1(
-                    $"{timestamp.ToIso8601()}\tCLOSED\t{connection.Login}\t{connection.RemoteSocket}",
+                    $"{timestamp.ToISO8601()}\tCLOSED\t{connection.Login}\t{connection.RemoteSocket}",
                     ct
                 );
 
@@ -1442,7 +1442,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
             //    lock (testCSMSv2_1)
             //    {
             //        File.AppendAllText(Path.Combine(AppContext.BaseDirectory, "TextMessages.log"),
-            //                           String.Concat(timestamp.ToIso8601(), "\tPING IN\t", connection.TryGetCustomData("chargingStationId"), "\t", connection.RemoteSocket, Environment.NewLine));
+            //                           String.Concat(timestamp.ToISO8601(), "\tPING IN\t", connection.TryGetCustomData("chargingStationId"), "\t", connection.RemoteSocket, Environment.NewLine));
             //    }
             //};
 
@@ -1451,7 +1451,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
             //    lock (testCSMSv2_1)
             //    {
             //        File.AppendAllText(Path.Combine(AppContext.BaseDirectory, "TextMessages.log"),
-            //                           String.Concat(timestamp.ToIso8601(), "\tPING OUT\t", connection.TryGetCustomData("chargingStationId"), "\t", connection.RemoteSocket, Environment.NewLine));
+            //                           String.Concat(timestamp.ToISO8601(), "\tPING OUT\t", connection.TryGetCustomData("chargingStationId"), "\t", connection.RemoteSocket, Environment.NewLine));
             //    }
             //};
 
@@ -1460,7 +1460,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
             //    lock (testCSMSv2_1)
             //    {
             //        File.AppendAllText(Path.Combine(AppContext.BaseDirectory, "TextMessages.log"),
-            //                           String.Concat(timestamp.ToIso8601(), "\tPONG IN\t", connection.TryGetCustomData("chargingStationId"), "\t", connection.RemoteSocket, Environment.NewLine));
+            //                           String.Concat(timestamp.ToISO8601(), "\tPONG IN\t", connection.TryGetCustomData("chargingStationId"), "\t", connection.RemoteSocket, Environment.NewLine));
             //    }
             //};
 
@@ -1477,7 +1477,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 await WriteToLogfileV2_1(
                     // RemoteSocket???
-                    $"{jsonRequestMessage.RequestTimestamp.ToIso8601()}\tREQ IN\t{jsonRequestMessage.NetworkPath.Source}\t{jsonRequestMessage.NetworkPath.Source}\t{jsonRequestMessage.Payload.ToString(Formatting.None)}",
+                    $"{jsonRequestMessage.RequestTimestamp.ToISO8601()}\tREQ IN\t{jsonRequestMessage.NetworkPath.Source}\t{jsonRequestMessage.NetworkPath.Source}\t{jsonRequestMessage.Payload.ToString(Formatting.None)}",
                     ct
                 );
 
@@ -1491,7 +1491,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
                 );
 
                 await WriteToLogfileV2_1(
-                    $"{jsonResponseMessage.ResponseTimestamp.ToIso8601()}\tRES IN\t{jsonResponseMessage.NetworkPath.Source}\t{jsonResponseMessage.NetworkPath.Source}\t{jsonResponseMessage.Payload.ToString(Formatting.None)}",
+                    $"{jsonResponseMessage.ResponseTimestamp.ToISO8601()}\tRES IN\t{jsonResponseMessage.NetworkPath.Source}\t{jsonResponseMessage.NetworkPath.Source}\t{jsonResponseMessage.Payload.ToString(Formatting.None)}",
                     ct
                 );
 
@@ -1519,7 +1519,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
                 );
 
                 await WriteToLogfileV2_1(
-                    $"{jsonRequestMessage.RequestTimestamp.ToIso8601()}\tREQ OUT\t{jsonRequestMessage.Destination.Last}\t{jsonRequestMessage.Destination.Last}\t{jsonRequestMessage.Payload.ToString(Formatting.None)}",
+                    $"{jsonRequestMessage.RequestTimestamp.ToISO8601()}\tREQ OUT\t{jsonRequestMessage.Destination.Last}\t{jsonRequestMessage.Destination.Last}\t{jsonRequestMessage.Payload.ToString(Formatting.None)}",
                     ct
                 );
 
@@ -1534,7 +1534,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
 
                 await WriteToLogfileV2_1(
                     // RemoteSocket???
-                    $"{jsonResponseMessage.ResponseTimestamp.ToIso8601()}\tRES OUT\t{jsonResponseMessage.Destination.Last}\t{jsonResponseMessage.Destination.Last}\t{jsonResponseMessage.Payload.ToString(Formatting.None)}",
+                    $"{jsonResponseMessage.ResponseTimestamp.ToISO8601()}\tRES OUT\t{jsonResponseMessage.Destination.Last}\t{jsonResponseMessage.Destination.Last}\t{jsonResponseMessage.Payload.ToString(Formatting.None)}",
                     jsonResponseMessage.CancellationToken
                 );
 
@@ -1566,7 +1566,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
             //    );
 
             //    await WriteToLogfileV2_1(
-            //        $"{binaryRequestMessage.RequestTimestamp.ToIso8601()}\tREQ IN\t{binaryRequestMessage.DestinationId}\t{binaryRequestMessage.DestinationId}\t{binaryRequestMessage.Payload.ToBase64()}",
+            //        $"{binaryRequestMessage.RequestTimestamp.ToISO8601()}\tREQ IN\t{binaryRequestMessage.DestinationId}\t{binaryRequestMessage.DestinationId}\t{binaryRequestMessage.Payload.ToBase64()}",
             //        binaryRequestMessage.CancellationToken
             //    );
 
@@ -1582,7 +1582,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
             //    );
 
             //    await WriteToLogfileV2_1(
-            //        $"{binaryResponseMessage.ResponseTimestamp.ToIso8601()}\tRES OUT\t{binaryResponseMessage.DestinationId}\t{binaryResponseMessage.DestinationId}\t{binaryResponseMessage.Payload.ToBase64()}",
+            //        $"{binaryResponseMessage.ResponseTimestamp.ToISO8601()}\tRES OUT\t{binaryResponseMessage.DestinationId}\t{binaryResponseMessage.DestinationId}\t{binaryResponseMessage.Payload.ToBase64()}",
             //        binaryResponseMessage.CancellationToken
             //    );
 
@@ -1598,7 +1598,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
             //    );
 
             //    await WriteToLogfileV2_1(
-            //        $"{binaryRequestMessage.RequestTimestamp.ToIso8601()}\tREQ OUT\t{binaryRequestMessage.DestinationId}\t{binaryRequestMessage.DestinationId}\t{binaryRequestMessage.Payload.ToBase64()}",
+            //        $"{binaryRequestMessage.RequestTimestamp.ToISO8601()}\tREQ OUT\t{binaryRequestMessage.DestinationId}\t{binaryRequestMessage.DestinationId}\t{binaryRequestMessage.Payload.ToBase64()}",
             //        binaryRequestMessage.CancellationToken
             //    );
 
@@ -1614,7 +1614,7 @@ namespace org.GraphDefined.WWCP.OCPP.LocalController
             //    );
 
             //    await WriteToLogfileV2_1(
-            //        $"{binaryResponseMessage.ResponseTimestamp.ToIso8601()}\tRES IN\t{binaryResponseMessage.NetworkPath.Source}\t{binaryResponseMessage.NetworkPath.Source}\t{binaryResponseMessage.Payload.ToBase64()}",
+            //        $"{binaryResponseMessage.ResponseTimestamp.ToISO8601()}\tRES IN\t{binaryResponseMessage.NetworkPath.Source}\t{binaryResponseMessage.NetworkPath.Source}\t{binaryResponseMessage.Payload.ToBase64()}",
             //        binaryResponseMessage.CancellationToken
             //    );
 

@@ -1,18 +1,16 @@
 <Solution>
-  <Folder Name="/Dependencies/" />
-  <Folder Name="/Dependencies/ISO15118/">
-    <Project Path="libs/WWCP_ISO15118_20/WWCP_ISO15118_2/WWCP_ISO15118_2.csproj" />
-    <Project Path="libs/WWCP_ISO15118_20/WWCP_ISO15118_20/WWCP_ISO15118_20.csproj" />
-    <Project Path="libs/WWCP_ISO15118_20/WWCP_ISO15118_20_Tests/WWCP_ISO15118_20_Tests.csproj" />
-    <Project Path="libs/WWCP_ISO15118_20/WWCP_ISO15118_2_Tests/WWCP_ISO15118_2_Tests.csproj" />
+  <Folder Name="/Dependencies/">
+    <Project Path="libs/LocalController/LocalController/LocalController.csproj" Id="0ad7b9ab-fd18-4a5b-895f-c9780510ce1b" />
+    <Project Path="libs/LocalController/LocalControllerTests/LocalControllerTests.csproj" Id="c6150719-f579-498f-8792-1255198611e9" />
   </Folder>
+  <Folder Name="/Dependencies/ISO15118/" />
   <Folder Name="/Dependencies/OCPP/">
     <Project Path="libs/WWCP_OCPP/WWCP_OCPP_Common/WWCP_OCPP_Common.csproj" />
   </Folder>
-  <Folder Name="/Dependencies/OCPPv1.6/">
+  <Folder Name="/Dependencies/OCPP/OCPPv1.6/">
     <Project Path="libs/WWCP_OCPP/WWCP_OCPPv1.6/WWCP_OCPPv1.6.csproj" />
   </Folder>
-  <Folder Name="/Dependencies/OCPPv2.1/">
+  <Folder Name="/Dependencies/OCPP/OCPPv2.1/">
     <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1/WWCP_OCPPv2.1.csproj" />
     <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_Adapter/WWCP_OCPPv2.1_Adapter.csproj" />
     <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_ChargingStation/WWCP_OCPPv2.1_ChargingStation.csproj" />
@@ -23,8 +21,6 @@
     <Project Path="libs/WWCP_OCPP/WWCP_OCPPv2.1_Tests/WWCP_OCPPv2.1_Tests.csproj" />
   </Folder>
   <Folder Name="/Dependencies/OpenChargingCloud/">
-    <Project Path="libs/OpenChargingCloudAPI/OpenChargingCloudAPI/OpenChargingCloudAPI.csproj" />
-    <Project Path="libs/OpenChargingCloudAPI/OpenChargingCloudAPITests/OpenChargingCloudAPITests.csproj" />
     <Project Path="libs/WWCP_Core/WWCP_Core/WWCP_Core.csproj" />
     <Project Path="libs/WWCP_Core/WWCP_CoreData/WWCP_CoreData.csproj" />
     <Project Path="libs/WWCP_Core/WWCP_Core_Tests/WWCP_Core_Tests.csproj" />
@@ -35,10 +31,16 @@
   <Folder Name="/Dependencies/Vanaheimr/">
     <Project Path="libs/Hermod/Hermod/Hermod.csproj" />
     <Project Path="libs/Hermod/HermodTests/HermodTests.csproj" />
-    <Project Path="libs/SMSAPI/SMSAPI/SMSAPI.csproj" />
     <Project Path="libs/Styx/Styx/Styx.csproj" />
     <Project Path="libs/Styx/StyxTests/StyxTests.csproj" />
-    <Project Path="libs/TelegramBotAPI/TelegramBotAPI/TelegramBotAPI.csproj" />
   </Folder>
-  <Project Path="OCPPLocalControllerTest/OCPPLocalControllerTest.csproj" />
+  <Folder Name="/Dependencies/Vanaheimr/Norn/">
+    <Project Path="libs/Norn/Norn/Norn.csproj" />
+    <Project Path="libs/Norn/NornTests/NornTests.csproj" />
+  </Folder>
+  <Folder Name="/Dependencies/Vanaheimr/Urdr/">
+    <Project Path="libs/Urdr/Urdr/Urdr.csproj" />
+    <Project Path="libs/Urdr/UrdrTests/UrdrTests.csproj" />
+  </Folder>
+  <Project Path="LocalControllerCLI/LocalControllerCLI.csproj" />
 </Solution>

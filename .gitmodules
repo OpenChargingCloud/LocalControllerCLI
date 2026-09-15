@@ -19,3 +19,6 @@
 [submodule "libs/WWCP_ISO15118"]
 	path = libs/WWCP_ISO15118
 	url = https://github.com/OpenChargingCloud/WWCP_ISO15118.git
+[submodule "libs/LocalController"]
+	path = libs/LocalController
+	url = https://github.com/OpenChargingCloud/LocalController.git

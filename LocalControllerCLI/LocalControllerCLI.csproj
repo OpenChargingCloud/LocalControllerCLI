@@ -2,17 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\libs\Hermod\Hermod\Hermod.csproj" />
-    <ProjectReference Include="..\libs\OpenChargingCloudAPI\OpenChargingCloudAPI\OpenChargingCloudAPI.csproj" />
-    <ProjectReference Include="..\libs\SMSAPI\SMSAPI\SMSAPI.csproj" />
+    <ProjectReference Include="..\libs\LocalController\LocalController\LocalController.csproj" />
     <ProjectReference Include="..\libs\Styx\Styx\Styx.csproj" />
-    <ProjectReference Include="..\libs\TelegramBotAPI\TelegramBotAPI\TelegramBotAPI.csproj" />
     <ProjectReference Include="..\libs\WWCP_Core\WWCP_CoreData\WWCP_CoreData.csproj" />
     <ProjectReference Include="..\libs\WWCP_Core\WWCP_Core\WWCP_Core.csproj" />
     <ProjectReference Include="..\libs\WWCP_OCPP\WWCP_OCPPv1.6\WWCP_OCPPv1.6.csproj" />
