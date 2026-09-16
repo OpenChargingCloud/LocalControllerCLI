@@ -116,8 +116,8 @@ namespace cloud.charging.open.LocalController.CLI
             Console.WriteLine($"                      first start for the user '{WebLoginSettings.DefaultUsername}' and shown once.");
             Console.WriteLine();
             Console.WriteLine("Configuration:");
-            Console.WriteLine($"  --config <file>   where the name servers, the time server and the OCPP");
-            Console.WriteLine($"                    identification of this controller live (default:");
+            Console.WriteLine($"  --config <file>   where the name servers, the time server, the OCPP identification");
+            Console.WriteLine($"                    and the charging station server of this controller live (default:");
             Console.WriteLine($"                    {ControllerConfigFile.DefaultFileName} below the repository root). Without the");
             Console.WriteLine("                    file the controller runs on the system defaults; the");
             Console.WriteLine("                    Configuration pages of the web interface write it, and every");
@@ -314,6 +314,10 @@ namespace cloud.charging.open.LocalController.CLI
                 Console.WriteLine($"  web login      user '{localController.Sessions.Username}', {localController.LoginFile.Path}");
                 Console.WriteLine($"  configuration  {localController.ConfigFile.Path}");
                 Console.WriteLine($"  OCPP node      {localController.Node.Id} ({localController.Node.VendorName} {localController.Node.Model})");
+                Console.WriteLine($"  stations       {(localController.OCPPServerEnabled
+                                                              ? $"{localController.OCPPServerURL}{(localController.OCPPServerTLS ? "" : " (unencrypted)")}, " +
+                                                                $"{localController.StationLogins.EnabledCount} login(s)"
+                                                              : "switched off - no charging station can connect")}");
                 Console.WriteLine($"  name servers   {(localController.DNSEnabled ? String.Join(", ", localController.DNSClient.DNSServers) : "switched off")}");
                 Console.WriteLine($"  time server    {localController.NTSClient.Hostname}{(localController.NTSEnabled ? "" : " (switched off)")}");
 
