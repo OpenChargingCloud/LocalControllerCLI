@@ -260,9 +260,11 @@ paket-files/
 __pycache__/
 *.pyc
 
-# The web login of a running local controller: a password hash, and nobody
-# else's business. Written at the first start beside the solution.
-web-login.json
+# The accounts of a running local controller: password hashes and the cookies
+# of whoever is signed in, and nobody else's business. Written at the first
+# start beside the solution. Anchored, so that it stays this one directory and
+# does not quietly swallow a source folder of the same name.
+/accounts/
 
 # What a running local controller is configured as: its name servers, its time
 # server and what it calls itself in OCPP. A property of this particular

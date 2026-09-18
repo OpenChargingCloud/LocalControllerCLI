@@ -60,12 +60,13 @@ Without that step the build stops at `error CS1566: ... events.css` in whichever
 of those projects it reaches first - a missing build product, not a missing
 file in git.
 
-At the first start there is no web login, so the controller makes one up for
-the user `root`, writes its hash to `web-login.json` beside the solution and
-prints the password once. Then open http://127.0.0.1:2350/ and sign in.
+At the first start there are no accounts, so the controller makes one up for
+the user `root`, keeps it under `accounts/` beside the solution and prints the
+password once. Signing in happens at Hermod's HTTPExt API, mounted under
+`/ext`. Then open http://127.0.0.1:2350/ and sign in.
 
 `dotnet run --project LocalControllerCLI -- --help` lists the rest: `--port`,
-`--any`, `--web-login <file>`, `--frontend <dir>`, `--config <file>`,
+`--any`, `--accounts <dir>`, `--frontend <dir>`, `--config <file>`,
 `--verbose`, `--quiet`, `--no-trace`.
 
 

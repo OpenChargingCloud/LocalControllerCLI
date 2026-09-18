@@ -22,7 +22,6 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 using cloud.charging.open.LocalController.Configuration;
 using cloud.charging.open.LocalController.Logging;
-using cloud.charging.open.LocalController.Web;
 
 using LC = cloud.charging.open.LocalController.LocalController;
 
@@ -65,9 +64,9 @@ namespace cloud.charging.open.LocalController.CLI
         /// neither leads to it.
         /// </summary>
         /// <remarks>
-        /// The web login and the configuration default to a place below it, so
+        /// The accounts and the configuration default to a place below it, so
         /// that they do not end up in bin/ - where the next "dotnet clean"
-        /// would take this controller's password with it.
+        /// would take this controller's accounts with it.
         /// </remarks>
         private static String RepositoryRoot()
         {
@@ -100,7 +99,7 @@ namespace cloud.charging.open.LocalController.CLI
         private static void PrintUsage()
         {
             Console.WriteLine("Usage: LocalControllerCLI [--port <number>] [--any] [--frontend <dist directory>]");
-            Console.WriteLine("                          [--web-login <file>] [--config <file>]");
+            Console.WriteLine("                          [--accounts <dir>] [--config <file>]");
             Console.WriteLine("                          [--verbose | --quiet] [--no-trace]");
             Console.WriteLine();
             Console.WriteLine("Web interface:");
@@ -110,10 +109,10 @@ namespace cloud.charging.open.LocalController.CLI
             Console.WriteLine("                    bundle embedded in the assembly - use it together with");
             Console.WriteLine("                    'npm run watch' in libs/LocalController/LocalController/Frontend");
             Console.WriteLine();
-            Console.WriteLine("Web login:");
-            Console.WriteLine($"  --web-login <file>  where the web login lives (default: {WebLoginFile.DefaultFileName} below the");
+            Console.WriteLine("Accounts:");
+            Console.WriteLine($"  --accounts <dir>    where the accounts live (default: {LC.DefaultAccountsPath}/ below the");
             Console.WriteLine("                      repository root). Without it a password is made up at the");
-            Console.WriteLine($"                      first start for the user '{WebLoginSettings.DefaultUsername}' and shown once.");
+            Console.WriteLine($"                      first start for the user '{LC.DefaultAdminUser}' and shown once.");
             Console.WriteLine();
             Console.WriteLine("Configuration:");
             Console.WriteLine($"  --config <file>   where the name servers, the time server, the OCPP identification");
@@ -144,7 +143,7 @@ namespace cloud.charging.open.LocalController.CLI
             IPPort?  port           = null;
             var      anyAddress     = false;
             String?  frontendDir    = null;
-            String?  loginFilePath  = null;
+            String?  accountsPath   = null;
             String?  configFilePath = null;
             var      verbose        = false;
             var      quiet          = false;
@@ -180,10 +179,10 @@ namespace cloud.charging.open.LocalController.CLI
                         }
                         break;
 
-                    case "--web-login":
-                        if (!TryTakeValue(Arguments, ref i, out loginFilePath))
+                    case "--accounts":
+                        if (!TryTakeValue(Arguments, ref i, out accountsPath))
                         {
-                            Console.Error.WriteLine("Missing file after --web-login!");
+                            Console.Error.WriteLine("Missing directory after --accounts!");
                             return 2;
                         }
                         break;
@@ -267,9 +266,7 @@ namespace cloud.charging.open.LocalController.CLI
 
                                       HTTPPort:         port,
 
-                                      LoginFile:        new WebLoginFile(
-                                                            loginFilePath ?? Path.Combine(RepositoryRoot(), WebLoginFile.DefaultFileName)
-                                                        ),
+                                      AccountsPath:     accountsPath ?? Path.Combine(RepositoryRoot(), LC.DefaultAccountsPath),
 
                                       ConfigFile:       new ControllerConfigFile(
                                                             configFilePath ?? Path.Combine(RepositoryRoot(), ControllerConfigFile.DefaultFileName)
@@ -311,7 +308,8 @@ namespace cloud.charging.open.LocalController.CLI
                 Console.WriteLine($"  JSON API       {localController.WebInterfaceURL}api/v1/status");
                 Console.WriteLine($"  event stream   {localController.WebInterfaceURL}api/v1/events");
                 Console.WriteLine($"  frontend from  {localController.Frontend.Description}");
-                Console.WriteLine($"  web login      user '{localController.Sessions.Username}', {localController.LoginFile.Path}");
+                Console.WriteLine($"  accounts       {localController.ExtAPI.Users.Count()} user(s) in {localController.AccountsPath}");
+                Console.WriteLine($"  sign in at     {localController.WebInterfaceURL}{LC.ExtAPIPath.ToString().Trim('/')}/login");
                 Console.WriteLine($"  configuration  {localController.ConfigFile.Path}");
                 Console.WriteLine($"  OCPP node      {localController.Node.Id} ({localController.Node.VendorName} {localController.Node.Model})");
                 Console.WriteLine($"  stations       {(localController.OCPPServerEnabled
@@ -324,8 +322,8 @@ namespace cloud.charging.open.LocalController.CLI
                 if (localController.GeneratedPassword is not null)
                 {
                     Console.WriteLine();
-                    Console.WriteLine("  ┌─ First start: there was no web login, so one was made up for you ─────────");
-                    Console.WriteLine($"  │  user      {localController.Sessions.Username}");
+                    Console.WriteLine("  ┌─ First start: there were no accounts, so one was made up for you ─────────");
+                    Console.WriteLine($"  │  user      {LC.DefaultAdminUser}");
                     Console.WriteLine($"  │  password  {localController.GeneratedPassword}");
                     Console.WriteLine("  │  It is shown here once and kept only as a hash. Write it down.");
                     Console.WriteLine("  └───────────────────────────────────────────────────────────────────────────");
