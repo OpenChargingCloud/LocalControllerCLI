@@ -115,7 +115,7 @@ namespace cloud.charging.open.LocalController.CLI
             Console.WriteLine($"                      first start for the user '{LC.DefaultAdminUser}' and shown once.");
             Console.WriteLine();
             Console.WriteLine("Configuration:");
-            Console.WriteLine($"  --config <file>   where the name servers, the time server, the OCPP identification");
+            Console.WriteLine($"  --config <file>   where the name servers, the time servers, the OCPP identification");
             Console.WriteLine($"                    and the charging station server of this controller live (default:");
             Console.WriteLine($"                    {ControllerConfigFile.DefaultFileName} below the repository root). Without the");
             Console.WriteLine("                    file the controller runs on the system defaults; the");
@@ -308,6 +308,28 @@ namespace cloud.charging.open.LocalController.CLI
                 Console.WriteLine($"  JSON API       {localController.WebInterfaceURL}api/v1/status");
                 Console.WriteLine($"  event stream   {localController.WebInterfaceURL}api/v1/events");
                 Console.WriteLine($"  frontend from  {localController.Frontend.Description}");
+
+                var builtFrom = BuiltFrom.Repositories.ToArray();
+
+                if (builtFrom.Length > 0)
+                {
+
+                    // One line each, and the whole hash. This is meant to be read
+                    // out of a bug report and pasted into a checkout, and an
+                    // abbreviation is a thing somebody then has to guess the rest
+                    // of. The column is as wide as the longest name rather than a
+                    // number picked today, so a repository joining later still
+                    // lines up.
+                    var width = builtFrom.Max(repository => repository.Repository!.Length);
+
+                    for (var i = 0; i < builtFrom.Length; i++)
+                        Console.WriteLine((i == 0 ? "  built from     " : "                 ") +
+                                          builtFrom[i].Repository!.PadRight(width) +
+                                          "  " +
+                                          builtFrom[i].Commit);
+
+                }
+
                 Console.WriteLine($"  accounts       {localController.ExtAPI.Users.Count()} user(s) in {localController.AccountsPath}");
                 Console.WriteLine($"  sign in at     {localController.WebInterfaceURL}{LC.ExtAPIPath.ToString().Trim('/')}/login");
                 Console.WriteLine($"  configuration  {localController.ConfigFile.Path}");
@@ -317,7 +339,31 @@ namespace cloud.charging.open.LocalController.CLI
                                                                 $"{localController.StationLogins.EnabledCount} login(s)"
                                                               : "switched off - no charging station can connect")}");
                 Console.WriteLine($"  name servers   {(localController.DNSEnabled ? String.Join(", ", localController.DNSClient.DNSServers) : "switched off")}");
-                Console.WriteLine($"  time server    {localController.NTSClient.Hostname}{(localController.NTSEnabled ? "" : " (switched off)")}");
+                #region The time servers
+
+                var bands = localController.TimeSources.Bands();
+                var asked = bands.SelectMany(band => band).ToArray();
+
+                if (asked.Length <= 1)
+                    Console.WriteLine($"  time server    {localController.NTSClient.Hostname}{(localController.NTSEnabled ? "" : " (switched off)")}");
+
+                else
+                {
+
+                    // One line per band, because a band is the unit that is
+                    // asked at once - putting two bands on one line would read
+                    // as six equal servers when it is two and then four.
+                    for (var i = 0; i < bands.Count; i++)
+                        Console.WriteLine((i == 0 ? "  time servers   " : "                 ") +
+                                          String.Join(", ", bands[i].Select(source => source.Hostname.ToString())) +
+                                          (bands.Count > 1 ? $"   (priority {bands[i][0].Priority})" : ""));
+
+                    Console.WriteLine($"                 at least {localController.TimeSources.MinServers} of them must answer" +
+                                      (localController.NTSEnabled ? "" : " - and NTS is switched off"));
+
+                }
+
+                #endregion
 
                 if (localController.GeneratedPassword is not null)
                 {
@@ -325,7 +371,13 @@ namespace cloud.charging.open.LocalController.CLI
                     Console.WriteLine("  ┌─ First start: there were no accounts, so one was made up for you ─────────");
                     Console.WriteLine($"  │  user      {LC.DefaultAdminUser}");
                     Console.WriteLine($"  │  password  {localController.GeneratedPassword}");
-                    Console.WriteLine("  │  It is shown here once and kept only as a hash. Write it down.");
+                    // Named rather than called "a hash", and read from the
+                    // implementation rather than typed here, so the box cannot
+                    // end up describing a scheme this controller no longer uses.
+                    // "i=600000" is also how the accounts file writes it down,
+                    // which is where somebody checking this will look.
+                    Console.WriteLine($"  │  It is shown here once and kept only as a {SecurePassword.PBKDF2SHA256} hash");
+                    Console.WriteLine($"  │  over {SecurePassword.DefaultIterations} iterations. Write it down.");
                     Console.WriteLine("  └───────────────────────────────────────────────────────────────────────────");
                 }
 
