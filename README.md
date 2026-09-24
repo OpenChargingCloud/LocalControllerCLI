@@ -1,5 +1,8 @@
 # Local Controller
 
+[![CI](https://github.com/OpenChargingCloud/LocalControllerCLI/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenChargingCloud/LocalControllerCLI/actions/workflows/ci.yml)
+[![Nightly](https://github.com/OpenChargingCloud/LocalControllerCLI/actions/workflows/nightly.yml/badge.svg)](https://github.com/OpenChargingCloud/LocalControllerCLI/actions/workflows/nightly.yml)
+
 This software implements an EV Charging Local Controller: the box between a
 CSMS above and the charging stations below, with a web interface in front of
 it. What it is and what it can be told lives in

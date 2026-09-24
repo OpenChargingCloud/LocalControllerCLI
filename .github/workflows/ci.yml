@@ -1,0 +1,253 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  # Manual runs from the Actions tab ("Run workflow"), same as nightly.yml.
+  workflow_dispatch:
+
+concurrency:
+  # Pull requests: one run per branch, newest wins. Pushes: one run per commit,
+  # and nothing cancels anything — a commit with no verdict is a hole nobody
+  # comes back to fill. Keying the group on the SHA rather than only turning
+  # cancel-in-progress off is what makes that hold for more than two pushes.
+  # The same arrangement as EVCLI and the other repositories of this stack.
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+
+  # ---------------------------------------------------------------------------
+  # One leg per platform this local controller is used on:
+  #
+  #  * Windows, because that is where it is developed.
+  #  * Debian 13, because that is what the family is deployed on. GitHub has
+  #    no Debian runner image, so this leg is an Ubuntu runner carrying a
+  #    debian:13 container.
+  #
+  # fail-fast is off on purpose: "red on exactly one platform" is the most
+  # valuable thing a two-leg matrix produces, so one leg must not cancel the
+  # other.
+  #
+  # Unlike EVCLI there is no job before this one. The ISO 15118 repository is
+  # a submodule here, but nothing in this solution builds any of it, so there
+  # are no schemas to fetch.
+  # ---------------------------------------------------------------------------
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            leg: windows-latest
+          - os: ubuntu-latest
+            container: debian:13
+            leg: debian-13-container
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+    steps:
+
+      # Before the checkout, not after it. The deepest file below this clone
+      # root sits 154 characters down, and under the classic 260-character
+      # limit a submodule checkout gives up halfway through with "Filename too
+      # long" — the same thing the README warns about for a clone by hand.
+      - name: Allow long paths (Windows)
+        if: runner.os == 'Windows'
+        run: git config --system core.longpaths true
+
+      # Also before the checkout, and for a sharper reason: git itself. The bare
+      # debian:13 image has none, and actions/checkout without git falls back to
+      # downloading a tarball over the REST API — which cannot bring submodules,
+      # so the failure would arrive much later, as a missing Hermod.
+      #
+      # The rest is what .NET and Node need on a bare Debian: curl for the
+      # install scripts and the smoke test, ICU and tzdata for globalization,
+      # OpenSSL for crypto, ca-certificates for NuGet over HTTPS, and xz-utils
+      # because the Node tarball is a .tar.xz that Debian's tar cannot open
+      # without it.
+      - name: Install prerequisites (Debian container)
+        if: runner.os == 'Linux'
+        run: apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git libicu76 libssl3t64 libstdc++6 tzdata xz-utils && git config --global --add safe.directory '*'
+
+      # The libraries are submodules, pinned, and testing them as pinned is the
+      # point: this repository's own question is whether this particular
+      # combination of libraries works together. nightly.yml asks the other.
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      # The web interface is built by npm and webpack from inside the .NET build
+      # — LocalController.csproj runs "npm ci" and "npm run build" and then
+      # embeds dist/ as assembly resources — and WWCP_Core and WWCP_OCPP compile
+      # TypeScript and SCSS with compilers pinned in their own package.json, so
+      # Node is not optional on either leg. 24.x rather than what Debian ships:
+      # package.json asks for 22 or newer, and the frontend's tests are run by
+      # node itself directly on .ts files, which needs a Node new enough to
+      # strip types without being asked.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      # The whole solution rather than only LocalControllerCLI: "they still
+      # compile together at these gitlinks" is the one statement this
+      # repository is uniquely able to make.
+      - name: Build
+        run: dotnet build LocalControllerCLI.slnx --configuration Release
+
+      # What the .NET build does not cover. webpack type-checks the modules it
+      # can reach from the entry point, which leaves out the test files; and
+      # the frontend's own tests are run by node, so nothing in a dotnet build
+      # would ever execute them.
+      #
+      # node_modules is already there — the build put it there — so this costs
+      # seconds. One leg, because TypeScript does not know which platform it is
+      # on, and a second run would only make one red look like two failures.
+      - name: The web interface (type checks and its own tests)
+        if: matrix.leg == 'debian-13-container'
+        working-directory: libs/LocalController/LocalController/Frontend
+        run: |
+          npm run typecheck
+          npm run typecheck:test
+          npm test
+
+      # The local controller's own tests. Nowhere else runs them —
+      # libs/LocalController has no workflow of its own, by design: it is not
+      # built alone, it is built here.
+      #
+      # No category filter: nothing in this project queries the network. Every
+      # test switches the time client off, or points it at 127.0.0.1 on a port
+      # nobody listens on, and the name server client is only ever asked what
+      # it is configured as.
+      - name: Test the local controller
+        timeout-minutes: 30
+        run: dotnet test libs/LocalController/LocalControllerTests/LocalControllerTests.csproj --configuration Release --no-build --logger "console;verbosity=normal" --logger "trx;LogFileName=${{ matrix.leg }}.trx" --results-directory artifacts
+
+      # The question no unit test in this repository asks: does it start?
+      # Everything that only happens at startup happens here — the assemblies
+      # resolve, Hermod binds its HTTP server, the HTTPExt API builds an account
+      # store out of nothing, and the web interface turns out to be inside the
+      # assembly rather than merely to have been built.
+      #
+      # Linux only: starting a process in the background, waiting for it and
+      # stopping it again is one shell to get right rather than two. The
+      # Windows leg answers the smaller question below.
+      #
+      # Everything it writes goes to a temporary directory: a first start makes
+      # an account store and a configuration file, and neither belongs in a
+      # workspace whose cleanliness the build stamps into every assembly it
+      # produces. Nothing on its standard input, so there is no prompt to type
+      # at: without a terminal it only serves, as it does as a service.
+      #
+      # Three questions are asked of it. "/" must come back as the embedded web
+      # interface. "/api/v1/status" must come back 401, because the JSON API of
+      # a local controller is nobody's business until somebody has signed in —
+      # a 200 there would mean the door had come off. The clock,
+      # "/api/v1/configuration/time", must come back 401 as well, and for one
+      # more reason: an unknown path under /api answers 404, so a 401 is also
+      # what proves the route is there at all.
+      - name: The local controller starts and answers (Debian)
+        if: matrix.leg == 'debian-13-container'
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          set -u
+          tmp="$(mktemp -d)"
+          dotnet LocalControllerCLI/bin/Release/net10.0/LocalControllerCLI.dll \
+              --port      18127 \
+              --accounts  "$tmp/accounts" \
+              --config    "$tmp/configuration.json" \
+              < /dev/null > "$tmp/console.log" 2>&1 &
+          pid=$!
+
+          # curl -w writes "000" itself when it could not connect, so nothing
+          # may add a value of its own behind it; and this shell runs with -e,
+          # so "|| true" keeps curl's exit code from ending the step. The
+          # ${:-000} after it is for the case where there is no curl at all.
+          root=000
+          for _ in $(seq 1 60); do
+              root="$(curl -sS -o "$tmp/index.html" -w '%{http_code}' http://127.0.0.1:18127/ 2>/dev/null || true)"
+              root="${root:-000}"
+              if [ "$root" != 000 ]; then
+                  break
+              fi
+              # Gone rather than slow: stop waiting for it.
+              kill -0 "$pid" 2>/dev/null || break
+              sleep 1
+          done
+
+          api="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/status 2>/dev/null || true)"
+          api="${api:-000}"
+
+          clock="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/configuration/time 2>/dev/null || true)"
+          clock="${clock:-000}"
+
+          # Asked before it is stopped, so that the answer below means something.
+          running=0
+          kill -0 "$pid" 2>/dev/null && running=1
+
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+
+          echo "GET /                            -> $root"
+          echo "GET /api/v1/status               -> $api"
+          echo "GET /api/v1/configuration/time   -> $clock"
+
+          # What the banner says this was built from - in every run, not only a
+          # red one, because a stamp that reads "unknown" or "-dirty" is worth
+          # seeing while everything else is green.
+          awk '/^  built from/ { f = 1 } f && !/^  built from/ && !/^                 / { f = 0 } f' "$tmp/console.log" || true
+
+          fault=0
+          if [ "$root" != 200 ]; then
+              echo "The web interface did not answer."
+              fault=1
+          elif ! grep -q "<title>Local Controller</title>" "$tmp/index.html"; then
+              echo "Something answered, but it is not the embedded web interface."
+              fault=1
+          fi
+          if [ "$api" != 401 ]; then
+              echo "The JSON API answered $api where 401 was expected: it is supposed to be shut to anyone not signed in."
+              fault=1
+          fi
+          if [ "$clock" != 401 ]; then
+              echo "The clock answered $clock where 401 was expected: a 404 means the route has gone missing, a 200 that it is open to anyone."
+              fault=1
+          fi
+
+          if [ "$fault" != 0 ]; then
+              echo
+              if [ "$running" = 1 ]; then
+                  echo "It was still running when it was asked."
+              else
+                  echo "It was no longer running when it was asked."
+              fi
+              echo "What it said, without the first-start password:"
+              grep -v -i password "$tmp/console.log" || echo "(nothing at all)"
+              exit 1
+          fi
+
+      # The same question in the form the other leg can answer without process
+      # control: the entry assembly loads, its arguments parse, it exits 0.
+      - name: The local controller runs (Windows)
+        if: runner.os == 'Windows'
+        run: dotnet LocalControllerCLI/bin/Release/net10.0/LocalControllerCLI.dll --help
+
+      # The console log answers "did it pass" and almost nothing else. TRX keeps,
+      # per test: outcome, duration, error message, stack trace, and the reason
+      # an Assert.Inconclusive gave — which never reaches the console at all.
+      #
+      # !cancelled() rather than success(): a red run is when these files matter
+      # most, so uploading only on green would throw the evidence away in
+      # exactly the case it is wanted.
+      - name: Upload test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results-${{ matrix.leg }}
+          path: artifacts/*.trx
