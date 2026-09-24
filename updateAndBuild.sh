@@ -6,6 +6,10 @@
 # fetched here either - that is a licence you accept yourself, once:
 #
 #   bash libs/WWCP_ISO15118/tools/download-schemas.sh
+#
+# Everything else the build needs it fetches itself: the TypeScript and SASS
+# compilers the libraries pin are installed by "npm ci" on the first build, and
+# the OCPP stylesheets are compiled by the build rather than by hand.
 
 set -e
 
