@@ -139,10 +139,11 @@ jobs:
       # Windows leg answers the smaller question below.
       #
       # Everything it writes goes to a temporary directory: a first start makes
-      # an account store and a configuration file, and neither belongs in a
-      # workspace whose cleanliness the build stamps into every assembly it
-      # produces. Nothing on its standard input, so there is no prompt to type
-      # at: without a terminal it only serves, as it does as a service.
+      # an account store, a configuration file and a log file, and none of that
+      # belongs in a workspace whose cleanliness the build stamps into every
+      # assembly it produces. Nothing on its standard input, so there is no
+      # prompt to type at: without a terminal it only serves, as it does as a
+      # service.
       #
       # Three questions are asked of it. "/" must come back as the embedded web
       # interface. "/api/v1/status" must come back 401, because the JSON API of
@@ -162,6 +163,7 @@ jobs:
               --port      18127 \
               --accounts  "$tmp/accounts" \
               --config    "$tmp/configuration.json" \
+              --log-file  "$tmp/logs" \
               < /dev/null > "$tmp/console.log" 2>&1 &
           pid=$!
 

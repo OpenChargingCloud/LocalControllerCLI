@@ -110,6 +110,7 @@ jobs:
               --port      18127 \
               --accounts  "$tmp/accounts" \
               --config    "$tmp/configuration.json" \
+              --log-file  "$tmp/logs" \
               < /dev/null > "$tmp/console.log" 2>&1 &
           pid=$!
 

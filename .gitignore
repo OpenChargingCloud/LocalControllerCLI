@@ -266,6 +266,15 @@ __pycache__/
 # does not quietly swallow a source folder of the same name.
 /accounts/
 
+# What this controller wrote down about its own runs. One file per day, and a
+# record of what this machine did rather than of what the source says - the
+# same reason as the accounts above, and the same anchor.
+#
+# "*.log" further up already covers the files; this covers the directory, so
+# that the build stamp does not start calling every tree dirty the first time
+# somebody puts something else in there.
+/logs/
+
 # What a running local controller is configured as: its name servers, its time
 # server and what it calls itself in OCPP. A property of this particular
 # installation, not of the source.
