@@ -2,14 +2,11 @@
 #
 # Pull everything and build it.
 #
-# The ISO 15118 schemas are not in any of these repositories and are not
-# fetched here either - that is a licence you accept yourself, once:
-#
-#   bash libs/WWCP_ISO15118/tools/download-schemas.sh
-#
-# Everything else the build needs it fetches itself: the TypeScript and SASS
-# compilers the libraries pin are installed by "npm ci" on the first build, and
-# the OCPP stylesheets are compiled by the build rather than by hand.
+# Nothing has to be fetched by hand first. The ISO 15118 repository is a
+# submodule here, but nothing in this solution builds any of it, so ISO's
+# schemas are not needed; the TypeScript and SASS compilers the libraries pin
+# are installed by "npm ci" on the first build, and the OCPP stylesheets are
+# compiled by the build rather than by hand.
 
 set -e
 

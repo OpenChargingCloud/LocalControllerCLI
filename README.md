@@ -48,17 +48,11 @@ dotnet run --project LocalControllerCLI
 The build needs the .NET 10 SDK and Node.js: the web interface is built by npm
 and embedded into the assembly, so the controller is one thing to deploy.
 
-The OCPP projects keep their stylesheets as SCSS and their compiled CSS out of
-git, so a fresh clone needs those generated once. It needs `sass` and `jq` on
-the PATH:
-
-```
-for f in libs/WWCP_OCPP/*/compileSASS.sh; do bash "$f"; done
-```
-
-Without that step the build stops at `error CS1566: ... events.css` in whichever
-of those projects it reaches first - a missing build product, not a missing
-file in git.
+Nothing has to be installed globally beside those two, and nothing has to be
+fetched by hand first. The TypeScript and SASS compilers the libraries pin are
+installed by `npm ci` on the first build, and the OCPP stylesheets are compiled
+by the build. The ISO 15118 repository is a submodule here, but nothing in this
+solution builds any of it, so ISO's schemas are not needed.
 
 At the first start there are no accounts, so the controller makes one up for
 the user `root`, keeps it under `accounts/` beside the solution and prints the
