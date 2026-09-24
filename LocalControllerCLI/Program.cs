@@ -344,8 +344,16 @@ namespace cloud.charging.open.LocalController.CLI
                 var bands = localController.TimeSources.Bands();
                 var asked = bands.SelectMany(band => band).ToArray();
 
+                // Without the root's dot, which a domain name prints itself
+                // with: four names in a row, each ending in a dot, read as four
+                // typing mistakes. What goes back into the file keeps it.
+                //
+                // And the one server the group asks rather than the single
+                // client's: a list of one in the file leaves that client where
+                // it was.
                 if (asked.Length <= 1)
-                    Console.WriteLine($"  time server    {localController.NTSClient.Hostname}{(localController.NTSEnabled ? "" : " (switched off)")}");
+                    Console.WriteLine($"  time server    {(asked.Length == 1 ? asked[0].Hostname : localController.NTSClient.Hostname).Trimmed}" +
+                                      (localController.NTSEnabled ? "" : " (switched off)"));
 
                 else
                 {
@@ -355,7 +363,7 @@ namespace cloud.charging.open.LocalController.CLI
                     // as six equal servers when it is two and then four.
                     for (var i = 0; i < bands.Count; i++)
                         Console.WriteLine((i == 0 ? "  time servers   " : "                 ") +
-                                          String.Join(", ", bands[i].Select(source => source.Hostname.ToString())) +
+                                          String.Join(", ", bands[i].Select(source => source.Hostname.Trimmed)) +
                                           (bands.Count > 1 ? $"   (priority {bands[i][0].Priority})" : ""));
 
                     Console.WriteLine($"                 at least {localController.TimeSources.MinServers} of them must answer" +
