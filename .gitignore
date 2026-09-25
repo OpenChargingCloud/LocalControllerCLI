@@ -300,6 +300,14 @@ configuration.json
 ocpp-stations.json
 csms-credentials.json
 
+# The keys the charging station port authenticates with, and the certificate
+# authorities it accepts stations from: two directories written beside the
+# configuration file the first time somebody makes a key or accepts a chain on
+# the web interface. The first holds private keys. Anchored like the accounts,
+# and ignored for the same reason as the two files above.
+/ocpp-server-keys/
+/ocpp-client-trust/
+
 # The sign-in this controller was given before it had an accounts directory:
 # one user and a PBKDF2 hash of their password, in a file nothing reads any
 # more. Ignored rather than deleted - it is somebody's credential, and throwing
