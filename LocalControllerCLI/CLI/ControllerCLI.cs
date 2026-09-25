@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2026 GraphDefined GmbH <achim.friedland@graphdefined.com>
- * This file is part of LocalController <https://github.com/OpenChargingCloud/LocalController>
+ * This file is part of LocalControllerCLI <https://github.com/OpenChargingCloud/LocalControllerCLI>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
