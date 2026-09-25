@@ -266,12 +266,12 @@ __pycache__/
 # does not quietly swallow a source folder of the same name.
 /accounts/
 
-# The certificate store every node below a local controller makes beside its
-# configuration file, at every start, whether or not anything is put in it -
-# and whatever is imported into it arrives with its private key. Anchored like
-# the accounts, and ignored for the same reason as everything written at every
-# start: the build stamp calls a tree dirty when git reports anything at all,
-# untracked files included, and a marker nobody believes is worse than none.
+# The certificate store of the node below a local controller, beside the
+# configuration file. The controller asks it to keep no kind of certificate,
+# so it is not made any more - but for a while every start made one, with an
+# index.json in it, and one left behind by those builds would otherwise make
+# the build stamp call every tree dirty; whatever is imported into a store
+# arrives with its private key besides. Anchored like the accounts.
 /certificates/
 
 # What this controller wrote down about its own runs. One file per day, and a
