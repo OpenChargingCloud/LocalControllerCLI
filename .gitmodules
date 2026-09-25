@@ -25,3 +25,6 @@
 [submodule "libs/ChargyCore.NET"]
 	path = libs/ChargyCore.NET
 	url = https://github.com/OpenChargingCloud/ChargyCore.NET.git
+[submodule "libs/WWCP_Node"]
+	path = libs/WWCP_Node
+	url = https://github.com/OpenChargingCloud/WWCP_Node.git

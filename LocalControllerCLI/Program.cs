@@ -20,9 +20,11 @@
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
+using cloud.charging.open.protocols.WWCP.Node;
+using cloud.charging.open.protocols.WWCP.Node.Logging;
+using cloud.charging.open.protocols.WWCP.Node.Configuration;
+
 using cloud.charging.open.LocalController.CommandLine;
-using cloud.charging.open.LocalController.Configuration;
-using cloud.charging.open.LocalController.Logging;
 
 using LC = cloud.charging.open.LocalController.LocalController;
 
@@ -96,6 +98,25 @@ namespace cloud.charging.open.LocalController.CLI
 
         #endregion
 
+        #region (private static) WhatToDoAbout(Problem)
+
+        /// <summary>
+        /// What somebody can do about a port this controller could not have -
+        /// which depends on which of its two it was, because they are set in
+        /// two different places.
+        /// </summary>
+        private static String WhatToDoAbout(PortUnavailableException Problem)
+
+            => Problem.Whose == LC.StationServerPort
+
+                   ? "Another copy of this controller already running is the usual answer. Stop it, or give the " +
+                     "charging station server another port: \"port\" in the \"ocppServer\" section of the configuration file."
+
+                   : "Another copy of this controller already running is the usual answer. Stop it, or give this one " +
+                     "another port with --port <number>.";
+
+        #endregion
+
         #region (private static) PrintUsage()
 
         private static void PrintUsage()
@@ -120,7 +141,7 @@ namespace cloud.charging.open.LocalController.CLI
             Console.WriteLine("Configuration:");
             Console.WriteLine($"  --config <file>   where the name servers, the time servers, the OCPP identification");
             Console.WriteLine($"                    and the charging station server of this controller live (default:");
-            Console.WriteLine($"                    {ControllerConfigFile.DefaultFileName} below the repository root). Without the");
+            Console.WriteLine($"                    {WWCPConfigFile.DefaultFileName} below the repository root). Without the");
             Console.WriteLine("                    file the controller runs on the system defaults; the");
             Console.WriteLine("                    Configuration pages of the web interface write it, and every");
             Console.WriteLine("                    change there takes effect at once.");
@@ -296,8 +317,8 @@ namespace cloud.charging.open.LocalController.CLI
 
                                       AccountsPath:     accountsPath ?? Path.Combine(RepositoryRoot(), LC.DefaultAccountsPath),
 
-                                      ConfigFile:       new ControllerConfigFile(
-                                                            configFilePath ?? Path.Combine(RepositoryRoot(), ControllerConfigFile.DefaultFileName)
+                                      ConfigFile:       new WWCPConfigFile(
+                                                            configFilePath ?? Path.Combine(RepositoryRoot(), WWCPConfigFile.DefaultFileName)
                                                         ),
 
                                       Frontend:         frontend,
@@ -336,7 +357,27 @@ namespace cloud.charging.open.LocalController.CLI
             await using (localController)
             {
 
-                await localController.Start();
+                try
+                {
+                    await localController.Start();
+                }
+                catch (PortUnavailableException problem)
+                {
+
+                    // What somebody starting a second copy of this controller
+                    // used to get was a stack trace under the operating
+                    // system's own words for a port in use - in German on a
+                    // German Windows - with neither the port nor what it was
+                    // for named anywhere.
+                    Console.Error.WriteLine($"The local controller could not start: {problem.Message}.");
+                    Console.Error.WriteLine(WhatToDoAbout(problem));
+
+                    if (verbose)
+                        Console.Error.WriteLine(problem);
+
+                    return 1;
+
+                }
 
                 #region What somebody who just started this needs to know
 
