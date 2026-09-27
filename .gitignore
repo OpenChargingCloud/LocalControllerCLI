@@ -288,6 +288,13 @@ __pycache__/
 # installation, not of the source.
 configuration.json
 
+# What each server this local controller connects to was last believed with:
+# the fingerprints of its certificate and its root, written beside the
+# configuration file the first time a server is believed and whenever it turns
+# up with another certificate, so that a change is noticed across a restart. A
+# record of what this machine saw, like the log, and not of the source.
+known-servers.json
+
 # What a running local controller writes beside itself: the logins its charging
 # stations sign in with, and what it signs in to the CSMS with. Both are
 # credentials of this installation and none of the source's business - and the
