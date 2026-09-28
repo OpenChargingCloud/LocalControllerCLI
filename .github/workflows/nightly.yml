@@ -129,7 +129,7 @@ jobs:
           api="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/status 2>/dev/null || true)"
           api="${api:-000}"
 
-          clock="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/configuration/time 2>/dev/null || true)"
+          clock="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/clock 2>/dev/null || true)"
           clock="${clock:-000}"
 
           running=0
@@ -140,7 +140,7 @@ jobs:
 
           echo "GET /                            -> $root"
           echo "GET /api/v1/status               -> $api"
-          echo "GET /api/v1/configuration/time   -> $clock"
+          echo "GET /api/v1/clock               -> $clock"
 
           # What the banner says this was built from - in every run, not only a
           # red one, because a stamp that reads "unknown" or "-dirty" is worth

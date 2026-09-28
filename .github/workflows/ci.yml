@@ -149,7 +149,7 @@ jobs:
       # interface. "/api/v1/status" must come back 401, because the JSON API of
       # a local controller is nobody's business until somebody has signed in —
       # a 200 there would mean the door had come off. The clock,
-      # "/api/v1/configuration/time", must come back 401 as well, and for one
+      # "/api/v1/clock", must come back 401 as well, and for one
       # more reason: an unknown path under /api answers 404, so a 401 is also
       # what proves the route is there at all.
       - name: The local controller starts and answers (Debian)
@@ -186,7 +186,7 @@ jobs:
           api="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/status 2>/dev/null || true)"
           api="${api:-000}"
 
-          clock="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/configuration/time 2>/dev/null || true)"
+          clock="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/clock 2>/dev/null || true)"
           clock="${clock:-000}"
 
           # Asked before it is stopped, so that the answer below means something.
@@ -198,7 +198,7 @@ jobs:
 
           echo "GET /                            -> $root"
           echo "GET /api/v1/status               -> $api"
-          echo "GET /api/v1/configuration/time   -> $clock"
+          echo "GET /api/v1/clock               -> $clock"
 
           # What the banner says this was built from - in every run, not only a
           # red one, because a stamp that reads "unknown" or "-dirty" is worth
