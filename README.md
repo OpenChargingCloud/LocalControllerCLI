@@ -64,7 +64,11 @@ password once. Signing in happens at Hermod's HTTPExt API, mounted under
 
 `dotnet run --project LocalControllerCLI -- --help` lists the rest: `--port`,
 `--any`, `--accounts <dir>`, `--frontend <dir>`, `--config <file>`,
-`--verbose`, `--quiet`, `--no-trace`, `--log-file <dir>`, `--no-log-file`.
+`--verbose`, `--quiet`, `--no-trace`, `--log-file <dir>`, `--no-log-file`,
+and the certificate store's `--certificates <dir>`,
+`--import-certificate <kind>=<file>`, `--certificate-password <pw>` and
+`--list-certificates`. They are every node's switches, read by WWCP_Node, as
+is what the console says once the controller is up.
 
 
 ### The log
