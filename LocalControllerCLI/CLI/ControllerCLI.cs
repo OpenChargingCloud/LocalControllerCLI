@@ -19,7 +19,7 @@
 
 using System.Reflection;
 
-using org.GraphDefined.Vanaheimr.CLI;
+using cloud.charging.open.protocols.WWCP.Node.CommandLine;
 
 using LC = cloud.charging.open.LocalController.LocalController;
 
@@ -32,21 +32,17 @@ namespace cloud.charging.open.LocalController.CommandLine
     /// The command line of a running local controller.
     /// </summary>
     /// <remarks>
-    /// Everything a command needs is reachable from here, which is why every
-    /// command takes one of these: the controller itself, and through it its
-    /// configuration, its log and everything the JSON API can do. A command is
-    /// a second way of asking for the same thing as the web interface - never
-    /// an implementation of its own.
-    ///
-    /// Commands are not listed anywhere. The constructor asks Styx to walk this
-    /// assembly for anything that implements ICLICommand and can be built from
-    /// a ControllerCLI, so a new command is a new file and nothing else.
+    /// The node's command line, with the commands every node has - syncNTS
+    /// among them - and the console until 'quit', Ctrl+C or SIGTERM. What only
+    /// a local controller can be told is a command built from a ControllerCLI
+    /// in this assembly, found as the node's are: a new command is a new file
+    /// and nothing else.
     ///
     /// Not in a namespace called CLI, as the program is: Styx's command line
     /// class is called that, and a namespace of the same name one level up
     /// would be found first.
     /// </remarks>
-    public class ControllerCLI : org.GraphDefined.Vanaheimr.CLI.CLI
+    public class ControllerCLI : NodeCLI
     {
 
         #region Data
@@ -77,7 +73,7 @@ namespace cloud.charging.open.LocalController.CommandLine
         public ControllerCLI(LC                 Controller,
                              params Assembly[]  AssembliesWithCLICommands)
 
-            : base(AssembliesWithCLICommands)
+            : base(Controller, AssembliesWithCLICommands)
 
         {
 
