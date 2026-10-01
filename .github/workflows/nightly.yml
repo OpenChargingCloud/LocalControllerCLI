@@ -88,11 +88,17 @@ jobs:
       # that say nothing about any of this code. Their own repositories run them
       # where that has been thought through; this night does not pretend to.
       #
+      # One TRX file per test project. LogFilePrefix names each after the leg,
+      # the framework and a time stamp, which the logger moves on by a second
+      # while that name is taken, so the names are not finishing times.
+      # LogFileName gave all ten projects the same file, each overwriting the
+      # one before, and the artifact held only the project that finished last.
+      #
       # Fatal, unlike the two steps further down: a red here is a real
       # regression in a combination this repository is responsible for.
       - name: Test everything, as pinned
         timeout-minutes: 120
-        run: dotnet test LocalControllerCLI.slnx --configuration Release --no-build --filter "TestCategory!=LiveDNS&TestCategory!=External&TestCategory!=LiveNetwork" --logger "console;verbosity=normal" --logger "trx;LogFileName=${{ matrix.leg }}.trx" --results-directory artifacts
+        run: dotnet test LocalControllerCLI.slnx --configuration Release --no-build --filter "TestCategory!=LiveDNS&TestCategory!=External&TestCategory!=LiveNetwork" --logger "console;verbosity=normal" --logger "trx;LogFilePrefix=${{ matrix.leg }}" --results-directory artifacts
 
       # The same start as in ci.yml, for the same reason and on the same leg.
       # Repeating it costs a minute and catches the kind of failure that only
