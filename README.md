@@ -119,6 +119,46 @@ with the output going into a file or through `| tee` - there is no prompt, and
 the controller runs until it is stopped, exactly as it did before.
 
 
+### Typing at it over SSH
+
+The same prompt is served over SSH, on port 22350 — twenty thousand above the
+web interface's — and on the addresses the web interface listens on: the
+loopback, or every address with `--any`. Nothing else is: no shell of the
+machine, no files, no tunnels. `--ssh-port` moves it, `--no-ssh` switches it
+off.
+
+Whoever signs in is an account of the local controller, under its name, with a
+key of its own. The first start makes `root`; give it your public key once:
+
+```
+dotnet run --project LocalControllerCLI -- --authorize-ssh-key root=C:\Users\you\.ssh\id_ed25519.pub
+```
+
+An OpenSSH `.pub` goes in as it is, and so does what PuTTYgen saves with *Save
+public key*. The key is kept in `accounts/ssh/root`, a file in the format of
+`authorized_keys`, and putting a line into it by hand does the same; taking one
+out locks that key out at once. Then:
+
+```
+ssh -p 22350 root@127.0.0.1
+```
+
+or, in PuTTY, host `127.0.0.1`, port `22350`, *Connection → Data → Auto-login
+username* `root`, and the private key under *Connection → SSH → Auth →
+Credentials*. The first time, PuTTY asks whether to trust the local
+controller's host key: the banner prints its fingerprint under `SSH`, to
+compare it with.
+
+Everything works as at the console — Tab, the history, the log above the line
+being typed — with three differences. `quit`, `exit` and Ctrl+D leave the
+session, and the local controller keeps running. The account may do what its
+roles let it do on the web interface, and the log names it: "'root' at the
+command line over SSH asked this local controller to synchronise its time.",
+tagged `cli` and `ssh`. And the session's log starts at the console's level and
+is its own: `log debug` shows everything here, `log off` nothing, for this
+session alone. `who` says who else is signed in.
+
+
 ### Your participation
 
 This software is Open Source under the **Affero GPL 3.0 license**.

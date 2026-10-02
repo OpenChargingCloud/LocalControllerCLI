@@ -122,7 +122,8 @@ namespace cloud.charging.open.LocalController.CLI
                                       CertificatesPath:  arguments.CertificatesPath,
                                       ConsoleLogLevel:   arguments.ConsoleLogLevel,
                                       LogPath:           arguments.LogPathBelow(root),
-                                      BridgeDebugLog:    !arguments.NoTrace
+                                      BridgeDebugLog:    !arguments.NoTrace,
+                                      SSH:               arguments.SSH
                                   );
             }
             catch (Exception e)
@@ -132,6 +133,10 @@ namespace cloud.charging.open.LocalController.CLI
 
             await using (localController)
             {
+
+                // What somebody signed in over SSH gets: this program's own command
+                // line, with its commands beside the node's.
+                localController.CommandLines = (terminal, caller) => new ControllerCLI(localController, terminal, caller);
 
                 if (localController.ImportCertificates(arguments, out _) is Int32 notImported)
                     return notImported;
