@@ -74,6 +74,31 @@ jobs:
       - name: Build
         run: dotnet build LocalControllerCLI.slnx --configuration Release
 
+      # The conformance annex of the Metrological CBOR specification, which
+      # Styx's SpecificationVectorTests run where MCBOR_TEST_VECTORS points at
+      # it - and report themselves ignored where nothing does, which on a
+      # runner was every night. It lives with the specification, in the public
+      # Whitepapers repository, and is fetched at the commit named here: this
+      # job tests the combination as pinned, and vectors a newer specification
+      # brings may ask for a Styx this repository does not pin yet. The night
+      # of the tips below takes them from master. curl -f, so that a vector
+      # that cannot be had fails here rather than turning the suite into a
+      # quiet "ignored".
+      - name: Fetch the Metrological CBOR test vectors, as pinned
+        shell: bash
+        env:
+          MCBOR_ANNEX: ea743a3f128565b7aa74043455306036d9ab3c39
+        run: |
+          set -eu
+          mkdir -p mcbor-test-vectors
+          for f in values values-invalid documents json-to-cbor; do
+            curl -fsSL -o "mcbor-test-vectors/$f.json" \
+              "https://raw.githubusercontent.com/OpenChargingTechnology/Whitepapers/$MCBOR_ANNEX/MetrologicalCBOR/test-vectors/$f.json"
+          done
+          dir="$PWD/mcbor-test-vectors"
+          if [ "$RUNNER_OS" = Windows ]; then dir="$(cygpath -m "$dir")"; fi
+          echo "MCBOR_TEST_VECTORS=$dir" >> "$GITHUB_ENV"
+
       # Every test project in the solution, which is what makes this different
       # from the gate: LocalControllerTests plus WWCP_Node, the node it is built
       # on, and Styx, Hermod, Norn, Urdr, WWCP_Core, WWCP_OCPP and ChargyCore,
@@ -292,6 +317,21 @@ jobs:
         id: build
         continue-on-error: true
         run: dotnet build LocalControllerCLI.slnx --configuration Release
+
+      # The Metrological CBOR test vectors as the specification has them now,
+      # from master: what Styx at its tip is held to, as Styx's own CI holds it.
+      - name: Fetch the Metrological CBOR test vectors from master (informational)
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -eu
+          mkdir -p mcbor-test-vectors
+          for f in values values-invalid documents json-to-cbor; do
+            curl -fsSL -o "mcbor-test-vectors/$f.json" \
+              "https://raw.githubusercontent.com/OpenChargingTechnology/Whitepapers/master/MetrologicalCBOR/test-vectors/$f.json"
+          done
+          echo "MCBOR_TEST_VECTORS=$PWD/mcbor-test-vectors" >> "$GITHUB_ENV"
 
       - name: Test against the tips (informational)
         if: steps.build.outcome == 'success'
