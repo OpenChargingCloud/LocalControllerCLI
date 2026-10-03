@@ -145,13 +145,21 @@ jobs:
       # prompt to type at: without a terminal it only serves, as it does as a
       # service.
       #
-      # Three questions are asked of it. "/" must come back as the embedded web
+      # Its SSH port is given, not left to the default of the web port plus
+      # 20000: 38127 lies where Linux hands out the ports of outgoing
+      # connections (32768-60999), so it was free only by chance - in EMSPCLI's
+      # container it was not, and the start failed. 22127 is below that on
+      # Linux, below 49152 on Windows, and clear of the defaults 22347-22353.
+      #
+      # Four questions are asked of it. "/" must come back as the embedded web
       # interface. "/api/v1/status" must come back 401, because the JSON API of
       # a local controller is nobody's business until somebody has signed in —
       # a 200 there would mean the door had come off. The clock,
       # "/api/v1/clock", must come back 401 as well, and for one
       # more reason: an unknown path under /api answers 404, so a 401 is also
-      # what proves the route is there at all.
+      # what proves the route is there at all. And the SSH port must greet
+      # with "SSH-2.0-": a command line that is not served is a failure here,
+      # not something to slip through.
       - name: The local controller starts and answers (Debian)
         if: matrix.leg == 'debian-13-container'
         timeout-minutes: 5
@@ -160,7 +168,7 @@ jobs:
           set -u
           tmp="$(mktemp -d)"
           dotnet LocalControllerCLI/bin/Release/net10.0/LocalControllerCLI.dll \
-              --port      18127 \
+              --port      18127               --ssh-port  22127 \
               --accounts  "$tmp/accounts" \
               --config    "$tmp/configuration.json" \
               --log-file  "$tmp/logs" \
@@ -189,6 +197,8 @@ jobs:
           clock="$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18127/api/v1/clock 2>/dev/null || true)"
           clock="${clock:-000}"
 
+          ssh_banner="$(timeout 5 bash -c 'exec 3<>/dev/tcp/127.0.0.1/22127 && head -n 1 <&3' 2>/dev/null | tr -d '\r' || true)"
+
           # Asked before it is stopped, so that the answer below means something.
           running=0
           kill -0 "$pid" 2>/dev/null && running=1
@@ -199,6 +209,7 @@ jobs:
           echo "GET /                            -> $root"
           echo "GET /api/v1/status               -> $api"
           echo "GET /api/v1/clock               -> $clock"
+          echo "SSH 22127                        -> ${ssh_banner:-nothing}"
 
           # What the banner says this was built from - in every run, not only a
           # red one, because a stamp that reads "unknown" or "-dirty" is worth
@@ -221,6 +232,10 @@ jobs:
               echo "The clock answered $clock where 401 was expected: a 404 means the route has gone missing, a 200 that it is open to anyone."
               fault=1
           fi
+          case "$ssh_banner" in
+              SSH-2.0-*) ;;
+              *) echo "The SSH server did not answer on 22127."; fault=1 ;;
+          esac
 
           if [ "$fault" != 0 ]; then
               echo
