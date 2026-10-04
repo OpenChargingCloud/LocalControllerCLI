@@ -284,6 +284,13 @@ __pycache__/
 # somebody puts something else in there.
 /logs/
 
+# Its SSH host key, the private half of who this vehicle is to every SSH
+# client: made at the first start with the SSH server on, and kept beside the
+# configuration file. Whoever has it can pose as this vehicle to anybody who
+# trusted it once - more to lose than the certificate store, and anchored the
+# same way. The public keys allowed to sign in live below /accounts/ already.
+/ssh/
+
 # What a running local controller is configured as: its name servers, its time
 # server and what it calls itself in OCPP. A property of this particular
 # installation, not of the source.
