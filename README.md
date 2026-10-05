@@ -157,9 +157,21 @@ service's journal or a redirected output; replace it with your own key and
 take it out. `--authorize-ssh-key` also works at any later start.
 
 An OpenSSH `.pub` goes in as it is, and so does what PuTTYgen saves with *Save
-public key*. The key is kept in `accounts/ssh/root`, a file in the format of
-`authorized_keys`, and putting a line into it by hand does the same; taking one
-out locks that key out at once. Then:
+public key*. The key is kept with the account, beside its password, and the
+`sshKeys` command manages it - at the console, or over SSH for the account
+signed in:
+
+```
+sshKeys root
+sshKeys root add ssh-ed25519 AAAA... you@laptop
+sshKeys root remove SHA256:abc
+```
+
+`remove` takes the fingerprint `sshKeys` lists, or enough of its beginning, and
+locks that key out at once. `apiKeys` does the same for the account's API keys,
+and shows a new one once, when it is made. A file `accounts/ssh/<account>` from
+an older version is taken over at the next start and renamed to
+`<account>.imported`; it is not read after that. Then:
 
 ```
 ssh -p 22350 root@127.0.0.1
