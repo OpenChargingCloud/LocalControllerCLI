@@ -32,6 +32,8 @@
     <Project Path="libs/WWCP_Node/WWCP_Node/WWCP_Node.csproj" />
     <Project Path="libs/WWCP_Node/WWCP_Node_Tests/WWCP_Node_Tests.csproj" />
     <Project Path="libs/WWCP_Node/WWCP_Node_TestKit/WWCP_Node_TestKit.csproj" />
+    <Project Path="libs/WWCP_POI/WWCP_POI2/WWCP_POI2.csproj" />
+    <Project Path="libs/WWCP_POI/WWCP_POI2_Tests/WWCP_POI2_Tests.csproj" />
   </Folder>
   <Folder Name="/Dependencies/Vanaheimr/">
     <Project Path="libs/Hermod/Hermod/Hermod.csproj" />
