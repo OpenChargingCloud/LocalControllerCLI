@@ -114,11 +114,12 @@ succeeded after 1648 ms: 4 of 4 server(s) answered (2 required), offset +989.4 m
 
 `help` lists what can be typed, `quit` leaves, **Tab** completes and **↑**
 walks back through what was typed before. `syncNTS` is **Sync now** on the
-**NTS** page, typed: the same group of time servers is asked, the same entries
-go into the log, and the same result is left behind for the page and the
-overview to show. The one entry that differs says who asked - the page names
-the account that pressed the button, the prompt says it was somebody at the
-command line. Neither of them steps the clock.
+**NTS** page, typed: the same group of time servers is asked - the legal one,
+unless `syncNTS <group>` names another of the groups `listNTSGroups` lists -
+the same entries go into the log, and the same result is left behind for the
+page and the overview to show. The one entry that differs says who asked -
+the page names the account that pressed the button, the prompt says it was
+somebody at the command line. Neither of them steps the clock.
 
 The log keeps writing while you type, from whichever thread did the thing it is
 reporting, and your half-typed line survives it: the line is taken off the
