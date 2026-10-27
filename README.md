@@ -81,6 +81,14 @@ and the certificate store's `--certificates <dir>`,
 `--list-certificates`. They are every node's switches, read by WWCP_Node, as
 is what the console says once the controller is up.
 
+Beyond the loopback, plain HTTP puts the password, API keys and session cookie
+on the network in the clear, and the controller says so loudly: `--https` with
+the store's TLS server identity, or `--https-cert` with `--https-key` and
+certbot's PEM files, serves HTTPS instead, `--redirect-port` beside it, and
+`--trusted-proxy` believes the reverse proxy in front that does it - as the
+configuration file's `web` section does, see
+[LocalController's README](https://github.com/OpenChargingCloud/LocalController#who-may-open-it).
+
 
 ### The log
 
