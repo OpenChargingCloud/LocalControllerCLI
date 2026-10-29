@@ -178,8 +178,11 @@ sshKeys root remove SHA256:abc
 
 `remove` takes the fingerprint `sshKeys` lists, or enough of its beginning, and
 locks that key out at once. `apiKeys` does the same for the account's API keys,
-lists each whole, and with `from 192.0.2.7,2001:db8::7` binds a new one to the
-addresses it may be used from. Then:
+and with `from 192.0.2.7,2001:db8::7` binds a new one to the addresses it may be
+used from. A key is shown once, in the answer to `apiKeys add`; the controller
+keeps only its SHA-256, and lists and logs a key by its first six characters and
+the beginning of its hash. Keys and sign-ins made before it kept them so are not
+taken any more: make the keys again, and sign in again. Then:
 
 ```
 ssh -p 22350 root@127.0.0.1
