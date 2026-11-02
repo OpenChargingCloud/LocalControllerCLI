@@ -48,8 +48,9 @@ dotnet build LocalControllerCLI.slnx
 dotnet run --project LocalControllerCLI
 ```
 
-The build needs the .NET 10 SDK and Node.js: the web interface is built by npm
-and embedded into the assembly, so the controller is one thing to deploy.
+The build needs the .NET 10 SDK and Node.js 22.15 or newer: the web interface
+is built by npm and embedded into the assembly, so the controller is one thing
+to deploy.
 
 Nothing has to be installed globally beside those two, and nothing has to be
 fetched by hand first. The TypeScript and SASS compilers the libraries pin are
