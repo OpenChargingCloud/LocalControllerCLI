@@ -123,7 +123,10 @@ namespace cloud.charging.open.LocalController.CLI
                                       ConsoleLogLevel:   arguments.ConsoleLogLevel,
                                       LogPath:           arguments.LogPathBelow(root),
                                       BridgeDebugLog:    !arguments.NoTrace,
-                                      SSH:               arguments.SSH,
+                                      // The log files over SFTP, unless the configuration
+                                      // file says "sftp": false - read by who may read the
+                                      // Logs page, and written by nobody.
+                                      SSH:               arguments.SSH with { SftpByDefault = true },
                                       Web:               arguments.Web
                                   );
             }
