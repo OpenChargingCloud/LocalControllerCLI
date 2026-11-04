@@ -145,8 +145,8 @@ the controller runs until it is stopped, exactly as it did before.
 The same prompt is served over SSH, on port 22350 — twenty thousand above the
 web interface's — and on the addresses the web interface listens on: the
 loopback, or every address with `--any`. Nothing else is: no shell of the
-machine, no files, no tunnels. `--ssh-port` moves it, `--no-ssh` switches it
-off.
+machine, no tunnels, and no files unless SFTP is switched on (below).
+`--ssh-port` moves it, `--no-ssh` switches it off.
 
 Whoever signs in is an account of the local controller, under its name, with a
 key of its own. The first start makes `root`; give it your public key with
@@ -203,6 +203,19 @@ command line over SSH asked this local controller to synchronise its time.",
 tagged `cli` and `ssh`. And the session's log starts at the console's level and
 is its own: `log debug` shows everything here, `log off` nothing, for this
 session alone. `who` says who else is signed in.
+
+The same server serves the log files over SFTP once it is switched on:
+`"ssh": { "sftp": true }` in `configuration.json`, or the switch on the **SSH
+server** page. It is off unless it says so, and switching it does not start the
+server anew - the next session is served or refused, and switching it off ends
+the SFTP sessions that are open. The controller's start says which: "SFTP is
+served as well: /logs, /logs/metrological." or "SFTP is not (ssh.sftp)." Two
+folders are shown, `/logs` with the day's files and `/logs/metrological` with
+the metrological log and its `signing-key.pub.pem` - never the private key -
+to whoever may read the **Logs** page, and nobody writes, removes or renames
+anything in them, `root` included. WinSCP, FileZilla or `sftp -P 22350
+root@127.0.0.1` sign in with the same key, and the log says who downloaded
+which file.
 
 
 ### Your participation
