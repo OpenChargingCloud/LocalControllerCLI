@@ -218,6 +218,41 @@ root@127.0.0.1` sign in with the same key, and the log says who downloaded
 which file.
 
 
+### Charging stations over SSH
+
+The charging stations may speak OCPP over the same SSH server, where
+`"ocppServer": { "ssh": { "enabled": true } }` in `configuration.json` or the
+switch on the **Charging stations** page says so - what lets a station in is in
+the [LocalController's README](libs/LocalController/README.md). The banner
+then has a second line under `stations`, with where they connect; the host
+key they pin is the one under `SSH`:
+
+```
+  stations       ws://0.0.0.0:2351 (unencrypted), 1 login(s)
+                 ssh://127.0.0.1:22350, subsystem ocpp@open.charging.cloud, 1 with an SSH key
+```
+
+The address is the SSH server's own - the loopback, unless `--any` - or the
+first name in `reachableAs`, where the stations are told one.
+
+Each station signs in with a key of its own, given under **Logins and
+groups** or with `stationKeys` - at the console, or over SSH by an account
+that may change the charging stations on the web interface:
+
+```
+stationKeys
+stationKeys CS001
+stationKeys CS001 add ssh-ed25519 AAAA... cs001
+stationKeys CS001 remove SHA256:abc
+```
+
+A station not listed yet is added by `add`, in the default group. `remove`
+takes the fingerprint `stationKeys` lists, or enough of its beginning, and
+ends the session that key opened at once. Where a key cannot let its station
+in - the station or its group switched off, a group that takes no SSH keys,
+OCPP over SSH switched off - the answer says so beside it.
+
+
 ### Your participation
 
 This software is Open Source under the **Affero GPL 3.0 license**.

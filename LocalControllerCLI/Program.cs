@@ -20,6 +20,7 @@
 using cloud.charging.open.protocols.WWCP.Node;
 using cloud.charging.open.protocols.WWCP.Node.CommandLine;
 using cloud.charging.open.protocols.WWCP.Node.Configuration;
+using cloud.charging.open.protocols.OCPP.SSH;
 
 using cloud.charging.open.LocalController.CommandLine;
 
@@ -83,6 +84,31 @@ namespace cloud.charging.open.LocalController.CLI
                      "charging station server another port: \"port\" in the \"ocppServer\" section of the configuration file."
 
                    : null;
+
+        #endregion
+
+        #region (private static) OverSSH(Controller)
+
+        /// <summary>
+        /// Where the charging stations connect over SSH, as a second line of
+        /// the station server's: the URL and how many of them have a key - the
+        /// host key they pin is the SSH server's, shown above. Nothing where
+        /// OCPP over SSH is switched off.
+        /// </summary>
+        private static String OverSSH(LC Controller)
+        {
+
+            if (!Controller.OCPPOverSSHServed)
+                return "";
+
+            if (Controller.OCPPServerSSHURL is not String url)
+                return "\nOCPP over SSH is switched on, but the SSH server is off - no charging station can connect over SSH";
+
+            var withAKey = Controller.StationLogins.Logins.Count(login => login.Enabled && login.HasSSHKey);
+
+            return $"\n{url}, subsystem {OCPPSshServer.OCPPSubsystem}, {withAKey} with an SSH key";
+
+        }
 
         #endregion
 
@@ -158,7 +184,8 @@ namespace cloud.charging.open.LocalController.CLI
                                              ("OCPP node",  $"{localController.Node.Id} ({localController.Node.VendorName} {localController.Node.Model})"),
                                              ("stations",   localController.OCPPServerEnabled
                                                                 ? $"{localController.OCPPServerURL}{(localController.OCPPServerTLS ? "" : " (unencrypted)")}, " +
-                                                                  $"{localController.StationLogins.EnabledCount} login(s)"
+                                                                  $"{localController.StationLogins.EnabledCount} login(s)" +
+                                                                  OverSSH(localController)
                                                                 : "switched off - no charging station can connect")
                                          ]))
                     Console.WriteLine(line);
