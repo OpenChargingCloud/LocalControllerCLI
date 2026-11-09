@@ -31,3 +31,6 @@
 [submodule "libs/WWCP_POI"]
 	path = libs/WWCP_POI
 	url = https://github.com/OpenChargingCloud/WWCP_POI.git
+[submodule "libs/WWCP_OpenADR"]
+	path = libs/WWCP_OpenADR
+	url = https://github.com/OpenChargingCloud/WWCP_OpenADR.git

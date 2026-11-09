@@ -58,8 +58,8 @@ namespace cloud.charging.open.LocalController.CLI
             DefaultPort:        LC.DefaultHTTPPort,
             FrontendSources:    "libs/LocalController/LocalController/Frontend",
 
-            ConfigurationSays:  "where the name servers, the time servers, the OCPP identification and the charging station " +
-                               $"server of this controller live (default: {WWCPConfigFile.DefaultFileName} below the repository " +
+            ConfigurationSays:  "where the name servers, the time servers, the OCPP identification, the charging station server " +
+                               $"and the grid operator's OpenADR VTN of this controller live (default: {WWCPConfigFile.DefaultFileName} below the repository " +
                                 "root). Without the file the controller runs on the system defaults; the Configuration pages " +
                                 "of the web interface write it, and every change there takes effect at once.",
 
@@ -186,7 +186,12 @@ namespace cloud.charging.open.LocalController.CLI
                                                                 ? $"{localController.OCPPServerURL}{(localController.OCPPServerTLS ? "" : " (unencrypted)")}, " +
                                                                   $"{localController.StationLogins.EnabledCount} login(s)" +
                                                                   OverSSH(localController)
-                                                                : "switched off - no charging station can connect")
+                                                                : "switched off - no charging station can connect"),
+                                             ("grid",       localController.OpenADREnabled
+                                                                ? $"OpenADR VTN {localController.OpenADRSettings.VTNURL} as '{localController.OpenADRSettings.ClientID}'" +
+                                                                  (localController.OpenADRLogin.HasSecret ? "" : ", without a client secret") +
+                                                                  (localController.OpenADRSettings.InTheClear ? " (unencrypted)" : "")
+                                                                : "no OpenADR VTN - no limits of a grid operator")
                                          ]))
                     Console.WriteLine(line);
 

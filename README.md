@@ -253,6 +253,44 @@ in - the station or its group switched off, a group that takes no SSH keys,
 OCPP over SSH switched off - the answer says so beside it.
 
 
+### The grid operator's limits
+
+The grid operator the charging pool is connected behind may limit how much it
+draws from the grid, or feeds into it, over OpenADR 3 - from a GridOperatorCLI,
+for instance. Its `localControllers add` prints what this controller signs in
+with, once:
+
+```
+  token URL      https://grid.example/openadr3/auth/token
+  client ID      lc-paradies
+  client secret  ...
+```
+
+Save those lines as a file, and take them in at the console:
+
+```
+LocalController> openADR import C:\Users\you\lc-paradies.txt
+This local controller signs in at the OpenADR VTN at https://grid.example/openadr3/ as 'lc-paradies' now; the secret is in ...\openadr-credentials.json.
+The VTN answered: 1 limit(s) not over; now: draw at most 44 kW.
+```
+
+and delete the file. The VTN URL and the client ID go into the `openADR`
+section of `configuration.json`; the secret goes into `openadr-credentials.json`
+beside it, readable by its owner alone, and never onto a command line - not as
+a switch of the program, which every user of the machine can list, nor typed at
+the prompt, whose lines are kept. `import` is the console's alone, as it reads a
+file of this machine; the JSON API takes the secret as well, see
+[LocalController's README](libs/LocalController/README.md).
+
+From then on the controller asks the VTN every 30 seconds, and the banner says
+so under `grid`. `openADR` shows the connection - where, as whom, signed in
+until when, when it was last asked, what went wrong - `openADR limits` the
+limits that are not over and which of them holds now, `openADR poll` asks at
+once, and `openADR off` and `openADR on` stop and start asking. Each event is
+reported on to the grid operator once. The limits are shown and logged; they
+are not yet passed on to the charging stations.
+
+
 ### Your participation
 
 This software is Open Source under the **Affero GPL 3.0 license**.
