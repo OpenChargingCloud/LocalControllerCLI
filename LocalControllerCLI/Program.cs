@@ -90,11 +90,16 @@ namespace cloud.charging.open.LocalController.CLI
         #region (private static) OverSSH(Controller)
 
         /// <summary>
-        /// Where the charging stations connect over SSH, as a second line of
-        /// the station server's: the URL and how many of them have a key - the
-        /// host key they pin is the SSH server's, shown above. Nothing where
-        /// OCPP over SSH is switched off.
+        /// Where the charging stations connect over SSH, as more lines of the
+        /// station server's: the URL on a line of its own, then the subsystem
+        /// and how many of them have a key - the host key they pin is the SSH
+        /// server's, shown above. Nothing where OCPP over SSH is switched off.
         /// </summary>
+        /// <remarks>
+        /// With the subsystem beside it, even "ssh://127.0.0.1:22350" made the
+        /// line 93 columns wide - and the banner breaks no line of a kind's.
+        /// So is the sentence for an SSH server that is off, which was 116.
+        /// </remarks>
         private static String OverSSH(LC Controller)
         {
 
@@ -102,11 +107,11 @@ namespace cloud.charging.open.LocalController.CLI
                 return "";
 
             if (Controller.OCPPServerSSHURL is not String url)
-                return "\nOCPP over SSH is switched on, but the SSH server is off - no charging station can connect over SSH";
+                return "\nOCPP over SSH is switched on, but the SSH server is off:\nno charging station can connect over SSH";
 
             var withAKey = Controller.StationLogins.Logins.Count(login => login.Enabled && login.HasSSHKey);
 
-            return $"\n{url}, subsystem {OCPPSshServer.OCPPSubsystem}, {withAKey} with an SSH key";
+            return $"\n{url}\nsubsystem {OCPPSshServer.OCPPSubsystem}, {withAKey} with an SSH key";
 
         }
 

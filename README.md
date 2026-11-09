@@ -224,12 +224,13 @@ The charging stations may speak OCPP over the same SSH server, where
 `"ocppServer": { "ssh": { "enabled": true } }` in `configuration.json` or the
 switch on the **Charging stations** page says so - what lets a station in is in
 the [LocalController's README](libs/LocalController/README.md). The banner
-then has a second line under `stations`, with where they connect; the host
+then has two more lines under `stations`, with where they connect; the host
 key they pin is the one under `SSH`:
 
 ```
   stations       ws://0.0.0.0:2351 (unencrypted), 1 login(s)
-                 ssh://127.0.0.1:22350, subsystem ocpp@open.charging.cloud, 1 with an SSH key
+                 ssh://127.0.0.1:22350
+                 subsystem ocpp@open.charging.cloud, 1 with an SSH key
 ```
 
 The address is the SSH server's own - the loopback, unless `--any` - or the
