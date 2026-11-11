@@ -17,6 +17,8 @@
 
 #region Usings
 
+using org.GraphDefined.Vanaheimr.Hermod;
+
 using cloud.charging.open.protocols.WWCP.Node;
 using cloud.charging.open.protocols.WWCP.Node.CommandLine;
 using cloud.charging.open.protocols.WWCP.Node.Configuration;
@@ -84,6 +86,27 @@ namespace cloud.charging.open.LocalController.CLI
                      "charging station server another port: \"port\" in the \"ocppServer\" section of the configuration file."
 
                    : null;
+
+        #endregion
+
+        #region (private static) KeyPins(Controller)
+
+        /// <summary>
+        /// The key pin a charging station pins to reach the station port, and
+        /// the next one where a rollover is announced, as more lines of the
+        /// station server's: whoever commissions a station reads it here
+        /// (EVQI Transport, key pins, 5.7). Nothing on an unencrypted port.
+        /// </summary>
+        /// <remarks>
+        /// The 64 hexadecimal digits without colons: with "key pin " in front
+        /// they make a line of 89 columns, and the colon notation would make
+        /// one of 120.
+        /// </remarks>
+        private static String KeyPins(LC Controller)
+
+            => (Controller.OCPPServerKeyPin     is KeyPin current ? $"\nkey pin {current}"     : "") +
+               (Controller.OCPPServerTLS &&
+                Controller.OCPPServerNextKeyPin is KeyPin next    ? $"\nnext key pin {next}"   : "");
 
         #endregion
 
@@ -189,6 +212,7 @@ namespace cloud.charging.open.LocalController.CLI
                                              ("stations",   localController.OCPPServerEnabled
                                                                 ? $"{localController.OCPPServerURL}{(localController.OCPPServerTLS ? "" : " (unencrypted)")}, " +
                                                                   $"{localController.StationLogins.EnabledCount} login(s)" +
+                                                                  KeyPins(localController) +
                                                                   OverSSH(localController)
                                                                 : "switched off - no charging station can connect"),
                                              ("grid",       localController.OpenADREnabled
