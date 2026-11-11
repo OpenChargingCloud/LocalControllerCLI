@@ -169,9 +169,8 @@ namespace cloud.charging.open.LocalController.CLI
             await using (localController)
             {
 
-                // What somebody signed in over SSH gets: this program's own command
-                // line, with its commands beside the node's.
-                localController.CommandLines = (terminal, caller) => new ControllerCLI(localController, terminal, caller);
+                // What somebody signed in over SSH gets is the local controller's
+                // own command line, which it hands to SSH itself.
 
                 if (localController.ImportCertificates(arguments, out _) is Int32 notImported)
                     return notImported;
