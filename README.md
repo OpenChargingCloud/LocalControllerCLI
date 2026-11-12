@@ -253,6 +253,10 @@ ends the session that key opened at once. Where a key cannot let its station
 in - the station or its group switched off, a group that takes no SSH keys,
 OCPP over SSH switched off - the answer says so beside it.
 
+The whole way from both ends, step by step - with the options of a key, the
+settings and what to look at when a station does not connect - is in
+[Charging stations over SSH: a walk-through](docs/Charging-stations-over-SSH.md).
+
 
 ### The grid operator's limits
 
