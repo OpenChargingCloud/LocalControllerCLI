@@ -197,7 +197,7 @@ All under `ocppServer.ssh` in `configuration.json` of the local controller:
 |---|---|---|
 | `enabled` | `false` | whether stations may connect over SSH. In effect at once. |
 | `subprotocols` | those of the WebSocket port | the OCPP versions offered over SSH, of `ocpp1.6`, `ocpp2.0.1`, `ocpp2.1`. Next start. |
-| `maxMessageSize` | `16777216` (16 MiB) | the largest OCPP message taken and sent, in bytes; 65536 to 67108864. Next start. |
+| `maxMessageSize` | `67108864` (64 MiB) | the largest OCPP message taken and sent, in bytes; 65536 to 67108864. Next start. |
 | `pingEverySeconds` | `30` | how often a connection is pinged, which is how a station that went away is noticed; 5 to 3600. Next start. |
 
 ```json
