@@ -21,6 +21,10 @@ identification, with an SSH key of its own, and asks for the subsystem
 `ocpp@open.charging.cloud`. There is no port of its own for it. Inside the
 subsystem the station speaks the OCPP it would speak over a WebSocket.
 
+The steps below are those of a key. A station can sign in with a one-time
+password of a TOTP secret instead, see
+[Without a key](#without-a-key-a-one-time-password-of-the-session).
+
 The station gets OCPP and nothing else: no command line, no command, no SFTP.
 The controller is believed by its SSH host key, as it would be by a TLS
 certificate.
@@ -76,8 +80,7 @@ station makes an Ed25519 key pair of its own and keeps it in
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA... cs001
 ```
 
-Copy that line. A TLS client certificate and a TOTP password are refused over
-SSH.
+Copy that line. A TLS client certificate is refused over SSH.
 
 ### 3. On the controller: give the station its key
 
@@ -145,6 +148,48 @@ The group `default` accepts SSH keys, unless it was written to the file
 before SSH keys existed: such a group stays as the file says until somebody
 adds `sshkey` under **Logins and groups**. A group's OCPP security profiles
 are not asked over SSH.
+
+
+## Without a key: a one-time password of the session
+
+A station that has a TOTP secret on the controller signs in with the SSH
+method `totp@open.charging.cloud`: the one-time password of that secret, bound
+to the session identifier of the SSH connection it is sent in. It is good in
+that session and in no other, so one read off a connection is no use anywhere
+else. What the station gets is what a key gets it.
+
+**On the controller**, under **Logins and groups**: **Give it a token** beside
+the station. The controller makes the secret and shows it once - copy it. The
+station's login group has to accept one-time passwords (`totp` among its
+sign-in methods), as over the WebSocket port; accepting SSH keys is not it.
+The group `default` does. **Bind token** there is about the TLS session of a
+WebSocket connection: over SSH the one-time password is bound to the session
+whatever it says.
+
+**On the station**, on the connection of step 2, under **And a password**:
+**New TOTP secret ...** with the station's identification as the login and
+the secret the controller showed, or credentials written down before. Tick
+**No key - it signs in with its password alone** for a station that is to
+have no key on the controller at all; left unticked, the station offers its
+key first and the one-time password where the key is not taken. Steps 4 and 5
+are as with a key: the one-time password is sent only to a server whose host
+key is believed.
+
+All of these let the station in, asked at sign-in and again every few seconds
+while the session lasts:
+
+- OCPP over SSH is switched on, and the SSH server runs.
+- The station is listed and switched on, and has a TOTP secret.
+- The one-time password is the one of that secret, for this session, now.
+- The station's login group is switched on and accepts one-time passwords.
+
+A session that came with a one-time password is held to the secret it came
+with: a new secret (**New token secret**), or the secret taken away (**Drop
+token**), ends it at once, as does the station or its group switched off.
+
+A one-time password that is not bound to the session - the answer to a prompt
+(keyboard-interactive), or sent as a password - is a password to an SSH
+server, and a password lets no charging station in.
 
 
 ## Restricting a key
@@ -234,3 +279,12 @@ SSH server's line of a failed sign-in.
 | the station says *refused* with a host key not believed | the controller shows another host key than the one pinned | compare with the fingerprint under `SSH` in the banner; correct the pin only if the change is yours |
 | the station says *not reached* | nothing answers at that address | the controller listens on the loopback unless started with `--any`; check the port |
 | it worked, and stopped | the key expired, or `from=` no longer matches the station's address | `stationKeys CS001` shows the options of each key |
+
+With a one-time password instead of a key:
+
+| What you see | What it means | What to do |
+|---|---|---|
+| the controller logs `... is in the login group 'x', which does not accept one-time passwords` | the group lacks `totp` | add one-time passwords to the group's sign-in methods |
+| the station says *refused*, the controller logs a failed sign-in and no reason | the secret is not the one the controller has for that station, the login is not the station's identification here, or the clocks of the two are too far apart | give the station a new token and write the secret down again; compare the login; check the time on both |
+| the station says *refused*, and it has a secret here | the server does not take `totp@open.charging.cloud` - no station there has a TOTP secret, or it is no local controller or CSMS of this kind - and the unbound one-time password sent instead is refused | give the station its token on the controller |
+| it worked, and stopped | the secret was changed or taken away on the controller | write the new secret down on the station |
