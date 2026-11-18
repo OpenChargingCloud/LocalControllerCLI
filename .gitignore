@@ -315,12 +315,11 @@ known-servers.json
 ocpp-stations.json
 csms-credentials.json
 
-# The keys the charging station port authenticates with, and the certificate
-# authorities it accepts stations from: two directories written beside the
-# configuration file the first time somebody makes a key or accepts a chain on
-# the web interface. The first holds private keys. Anchored like the accounts,
-# and ignored for the same reason as the two files above.
-/ocpp-server-keys/
+# The certificate authorities the charging station port accepts stations
+# from: a directory written beside the configuration file the first time
+# somebody accepts a chain on the web interface. What the port presents - its
+# keys among it - is in the node's store, /certificates/ above. Anchored like
+# the accounts, and ignored for the same reason as the two files above.
 /ocpp-client-trust/
 
 # The sign-in this controller was given before it had an accounts directory:
