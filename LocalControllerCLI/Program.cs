@@ -132,7 +132,7 @@ namespace cloud.charging.open.LocalController.CLI
             if (Controller.OCPPServerSSHURL is not String url)
                 return "\nOCPP over SSH is switched on, but the SSH server is off:\nno charging station can connect over SSH";
 
-            var withAKey = Controller.StationLogins.Logins.Count(login => login.Enabled && login.HasSSHKey);
+            var withAKey = Controller.WebSocketLogins.Logins.Count(login => login.Enabled && login.HasSSHKey);
 
             return $"\n{url}\nsubsystem {OCPPSshServer.OCPPSubsystem}, {withAKey} with an SSH key";
 
@@ -211,7 +211,7 @@ namespace cloud.charging.open.LocalController.CLI
                                              ("OCPP node",  $"{localController.Node.Id} ({localController.Node.VendorName} {localController.Node.Model})"),
                                              ("stations",   localController.OCPPServerEnabled
                                                                 ? $"{localController.OCPPServerURL}{(localController.OCPPServerTLS ? "" : " (unencrypted)")}, " +
-                                                                  $"{localController.StationLogins.EnabledCount} login(s)" +
+                                                                  $"{localController.WebSocketLogins.EnabledCount} login(s)" +
                                                                   KeyPins(localController) +
                                                                   OverSSH(localController)
                                                                 : "switched off - no charging station can connect"),
