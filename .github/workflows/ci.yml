@@ -116,6 +116,26 @@ jobs:
           npm run typecheck:test
           npm test
 
+      # The pages every node shares - among them the connections, the WebSocket
+      # logins, the SSH keys and the accepted chains, which moved out of
+      # WWCP_OCPP_Node into WWCP_Node with WWCP_Node a0c1c809 - are tested in
+      # WWCP_Node's own frontend, and the local controller's "npm test" above
+      # no longer reaches them: it ran 223 tests before the move and 130 after.
+      # The local controller bundles these pages, so they are run here as
+      # pinned.
+      #
+      # Nothing in the .NET build installs this frontend - WWCP_Node has no
+      # npm step of its own - so it gets its own "npm ci". --ignore-scripts
+      # because none of its five development dependencies needs one.
+      - name: The pages every node shares (WWCP_Node's type checks and tests)
+        if: matrix.leg == 'debian-13-container'
+        working-directory: libs/WWCP_Node/Frontend
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run typecheck
+          npm run typecheck:test
+          npm test
+
       # The local controller's own tests. Nowhere else runs them —
       # libs/LocalController has no workflow of its own, by design: it is not
       # built alone, it is built here.
